@@ -7,7 +7,7 @@ import React from 'react';
 
 export const MyProfile = () => {
   const [value, setValue] = useState(null);
-  const [logo, setLogo] = useState("/Logo.svg");
+  const [logo, setLogo] = useState("/download.jpeg");
 
   const handleLogoUpload = (file) => {
     const reader = new FileReader();
@@ -45,12 +45,11 @@ export const MyProfile = () => {
       <Card radius={"md"} mt={20}>
         <Title order={5} >Company Details</Title>
 
-
           <Box mt={10} w={100} h={100}  >
             {logo ? (
-              <Image radius={"lg"} src={logo} alt="Company Logo" />
+              <Image fit='contain' radius={"lg"} src={logo} alt="Company Logo" />
             ) : (
-              <Image radius={"lg"} src={"./Logo.svg"} alt="Default Logo" />
+              <Image fit='cover' radius={"lg"} src={"/download.jpeg"} alt="Default Logo" />
             )}
           </Box>
 
