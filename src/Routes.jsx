@@ -1,10 +1,10 @@
 import { BrowserRouter } from "react-router-dom";
-import { Login } from "./Components/Admin/Pages/Login";
-import { Dashboard } from "./Components/Admin/Pages/Dashboard";
-import { NewJob } from "./Components/Admin/NavlinkPages/NewJob";
-import { ManageJobs } from "./Components/Admin/NavlinkPages/ManageJobs";
-import { MyProfile } from "./Components/Admin/NavlinkPages/MyProfile";
-import { Register } from "./Components/Admin/Pages/Register";
+import { Login } from "./Components/Pages/Login";
+import { Dashboard } from "./Components/Pages/Dashboard";
+import { NewJob } from "./Components/NavlinkPages/NewJob";
+import { ManageJobs } from "./Components/NavlinkPages/ManageJobs";
+import { MyProfile } from "./Components/NavlinkPages/MyProfile";
+import { Register } from "./Components/Pages/Register";
 
 export const routes = [
   {

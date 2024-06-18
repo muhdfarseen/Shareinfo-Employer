@@ -2,14 +2,14 @@ import { AppShell, Burger, Button, Group, Image, NavLink } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import {
-  IconSpherePlus,
+  IconHexagonPlus,
   IconBriefcase,
   IconUserCircle,
 } from "@tabler/icons-react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 const data = [
-  { id: 1, icon: IconSpherePlus, label: "Post New Job", path: "newjob" },
+  { id: 1, icon: IconHexagonPlus, label: "Post New Job", path: "newjob" },
   { id: 2, icon: IconBriefcase, label: "Manage Jobs", path: "managejob" },
   { id: 5, icon: IconUserCircle, label: "My Profile", path: "myprofile" },
 ];
@@ -59,7 +59,7 @@ export const Dashboard = () => {
             key={item.label}
             label={item.label}
             active={index === active}
-            onClick={(event) => handleLinkClick(event, index)}
+            onClick={(event) => { handleLinkClick(event, index); toggle(); }}
             leftSection={<item.icon size="1rem" stroke={1.5} />}
             style={{ borderRadius: "7px" }}
             color="blue"
