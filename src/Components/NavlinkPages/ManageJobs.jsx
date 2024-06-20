@@ -1,5 +1,9 @@
-import { Title, Table, Input, Card, Image, SimpleGrid, Button, Group, Box, FileInput, Badge, ActionIcon } from '@mantine/core';
+import { Title, Table, Textarea, Input, Text, Card, Modal, Image, SimpleGrid, Button, Group, Box, FileInput, Badge, ActionIcon, Flex, Radio, Switch } from '@mantine/core';
 import { IconEye, IconTrash, IconEdit } from '@tabler/icons-react';
+import { useDisclosure } from '@mantine/hooks';
+import { IconSquareRoundedCheck } from '@tabler/icons-react'
+import { DateInput } from '@mantine/dates';
+
 
 const elements = [
   {
@@ -42,6 +46,10 @@ const elements = [
 
 export const ManageJobs = () => {
 
+  const [deleteModalOpened, { open: openDeleteModal, close: closeDeleteModal }] = useDisclosure(false);
+  const [editModalOpened, { open: openEditModal, close: closeEditModal }] = useDisclosure(false);
+
+
   const rows = elements.map((element) => (
     <Table.Tr key={element.title}>
       <Table.Td>{element.title}</Table.Td>
@@ -50,14 +58,11 @@ export const ManageJobs = () => {
       <Table.Td><Badge variant={"light"} color={(element.status == 'Open') ? 'green' : 'red'} >{element.status}</Badge></Table.Td>
       <Table.Td>
 
-        <Group gap={10} >
-          <ActionIcon variant="light" aria-label="Settings">
-            <IconEye style={{ width: '70%', height: '70%' }} stroke={1.5} />
-          </ActionIcon>
-          <ActionIcon variant="light" color='gray' aria-label="Settings">
+        <Group gap={10}>
+          <ActionIcon variant="light" color="gray" aria-label="Edit" onClick={openEditModal}>
             <IconEdit style={{ width: '70%', height: '70%' }} stroke={1.5} />
           </ActionIcon>
-          <ActionIcon variant="light" color='red' aria-label="Settings">
+          <ActionIcon variant="light" color="red" aria-label="Delete" onClick={openDeleteModal}>
             <IconTrash style={{ width: '70%', height: '70%' }} stroke={1.5} />
           </ActionIcon>
         </Group>
@@ -85,6 +90,131 @@ export const ManageJobs = () => {
         </Table>
       </Card>
 
+
+      {/* Delete Confirmation Modal */}
+      <Modal size="auto" opened={deleteModalOpened} onClose={closeDeleteModal} withCloseButton={false}>
+        <Flex gap={20} align="center" justify="center">
+          <Text>Are you sure to delete this Job post?</Text>
+          <Button onClick={closeDeleteModal} size="xs" color="red">
+            Delete
+          </Button>
+        </Flex>
+      </Modal>
+
+      {/* Edit Modal */}
+      <Modal size="auto" opened={editModalOpened} onClose={closeEditModal} withCloseButton={false}>
+        <Group justify="space-between">
+          <Title order={3} >Edit Job</Title>
+          <Switch
+            defaultChecked
+            label="Active / Inactive"
+          />
+          <Button color='green' size='xs' leftSection={<IconSquareRoundedCheck size={14} />} >Save</Button>
+
+        </Group>
+
+
+        <Card radius={"md"} mt={10} >
+          <Input.Wrapper label="Job Title" >
+            <Input placeholder="" />
+          </Input.Wrapper>
+
+          <Textarea
+            mt={10}
+            label="Job Description"
+            autosize
+            minRows={5}
+            placeholder="In this dynamic role, you will be responsible for [brief, attention-grabbing description of 2-3 key responsibilities]. You will play a crucial part in [explain how this role contributes to the team/company's success]."
+          />
+
+          <SimpleGrid
+            mt={10}
+            cols={{ base: 1, sm: 2, lg: 3 }}
+            spacing={{ base: 10, sm: 'xl' }}
+            verticalSpacing={{ base: 'md', sm: 'xl' }}
+          >
+            <Input.Wrapper label="Job Level" >
+              <Input placeholder="" />
+            </Input.Wrapper>
+            <Input.Wrapper label="Working Mode" >
+              <Input placeholder="" />
+            </Input.Wrapper>
+            <Input.Wrapper label="Working Preference" >
+              <Input placeholder="" />
+            </Input.Wrapper>
+          </SimpleGrid>
+
+          <Textarea
+            mt={10}
+            label="Perks & Benefits"
+            autosize
+            minRows={2}
+          />
+        </Card>
+
+        <Card radius={"md"} mt={20} >
+          <SimpleGrid
+            mt={10}
+            cols={{ base: 1, sm: 2, lg: 3 }}
+            spacing={{ base: 10, sm: 'xl' }}
+            verticalSpacing={{ base: 'md', sm: 'md' }}
+          >
+            <Input.Wrapper label="Salary Type" >
+              <Input placeholder="" />
+            </Input.Wrapper>
+            <Input.Wrapper label="Minimum Salary" >
+              <Input placeholder="" />
+            </Input.Wrapper>
+            <Input.Wrapper label="Maximum Salary" >
+              <Input placeholder="" />
+            </Input.Wrapper>
+            <Input.Wrapper label="Job Category" >
+              <Input placeholder="" />
+            </Input.Wrapper>
+            <Input.Wrapper label="Experience Type" >
+              <Input placeholder="" />
+            </Input.Wrapper>
+            <Input.Wrapper label="Minimum Experience" >
+              <Input placeholder="" />
+            </Input.Wrapper>
+            <Input.Wrapper label="Educational Qualification" >
+              <Input placeholder="" />
+            </Input.Wrapper>
+            <Input.Wrapper label="Reference Website" >
+              <Input placeholder="" />
+            </Input.Wrapper>
+            <Input.Wrapper label="Number of Vacancies" >
+              <Input placeholder="" />
+            </Input.Wrapper>
+          </SimpleGrid>
+
+          <Input.Wrapper mt={10} label="Required Skills" >
+            <Input placeholder="" />
+          </Input.Wrapper>
+
+          <SimpleGrid
+            mt={10}
+            cols={{ base: 1, sm: 2, lg: 3 }}
+            spacing={{ base: 10, sm: 'xl' }}
+            verticalSpacing={{ base: 'md', sm: 'xl' }}
+          >
+            <Input.Wrapper label="Job Location" >
+              <Input placeholder="" />
+            </Input.Wrapper>
+            <DateInput
+              valueFormat="DD/MM/YYYY"
+              label="Recruitment Start Date"
+              placeholder="Recruitment Start Date"
+            />
+            <DateInput
+              valueFormat="DD/MM/YYYY"
+              label="Recruitment End Date"
+              placeholder="Recruitment End Date"
+            />
+          </SimpleGrid>
+
+        </Card>
+      </Modal>
 
     </>
   )

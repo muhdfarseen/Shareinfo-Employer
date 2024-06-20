@@ -5,13 +5,20 @@ import {
   IconHexagonPlus,
   IconBriefcase,
   IconUserCircle,
+  IconCheckbox,
+  IconAddressBook,
+  IconSettings
 } from "@tabler/icons-react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 const data = [
   { id: 1, icon: IconHexagonPlus, label: "Post New Job", path: "newjob" },
   { id: 2, icon: IconBriefcase, label: "Manage Jobs", path: "managejob" },
+  { id: 3, icon: IconAddressBook, label: "All Apllicants", path: "allaplicants" },
+  { id: 4, icon: IconCheckbox, label: "Shortlisted", path: "shortlisted" },
   { id: 5, icon: IconUserCircle, label: "My Profile", path: "myprofile" },
+  { id: 6, icon: IconSettings, label: "Settings", path: "settings" },
+
 ];
 
 export const Dashboard = () => {
@@ -34,7 +41,7 @@ export const Dashboard = () => {
     event.preventDefault();
   };
 
-  const HandleLogOut = ()=>{
+  const HandleLogOut = () => {
     navigate("/")
   }
 

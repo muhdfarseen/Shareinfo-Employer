@@ -4,3 +4,15 @@
     font-family: "Nunito" !important;
     font-optical-sizing: auto !important;
 }
+
+.hoverclassscale{
+    transition:
+    transform 100ms ease;
+
+  &:hover {
+    box-shadow: var(--mantine-shadow-md);
+    transform: scaleY(1.05);
+    cursor: pointer;
+    z-index: 1;
+  }
+}
