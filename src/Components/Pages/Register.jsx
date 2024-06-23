@@ -57,39 +57,42 @@ export const Register = ({ closefun }) => {
   }, [resendActive, timerresend]);
 
 
-  const [CookieHeader, setCookieHeader] = useState([]);
 
 
-  const handleSendOtp = async () => {
-    try {
-      const response = await axiosInstance.post('/signup/', { email });
-      console.log('Response:', response);
-      if (response.status === 200) {
-        const headersObject = response.headers;
-        setCookieHeader(headersObject['Set-Cookie'])
-        
-        setResetPassState(2);
-        setTimer(180);
-      }
-    } catch (error) {
-      console.error('Error sending OTP:', error);
+  let setCookieHeader = '';
+
+const handleSendOtp = async () => {
+  try {
+    const response = await axiosInstance.post('/signup/', { email });
+
+    if (response.status === 200) {        
+      setResetPassState(2);
+      setTimer(180);
+
+      // Access headers from the response and store the set-cookie header
+      setCookieHeader = response.headers['set-cookie'];
+      console.log('Response set-cookie:', setCookieHeader);
     }
-  };
-  
-  const handleVerifyOtp = async () => {
-    try {
-      const response = await axiosInstance.post('/otp-verify/', { otp }, {
-        headers: {
-          Cookie: CookieHeader,
-        },
-      });
-      if (response.status === 201) {
-        setResetPassState(3);
-      }
-    } catch (error) {
-      console.error('Error verifying OTP:', error);
+  } catch (error) {
+    console.error('Error sending OTP:', error);
+  }
+};
+
+const handleVerifyOtp = async () => {
+  try {
+    const response = await axiosInstance.post('/otp-verify/', { otp }, {
+      headers: {
+        Cookie: setCookieHeader,
+      },
+    });
+
+    if (response.status === 201) {
+      setResetPassState(3);
     }
-  };
+  } catch (error) {
+    console.error('Error verifying OTP:', error);
+  }
+};
   
   
 
