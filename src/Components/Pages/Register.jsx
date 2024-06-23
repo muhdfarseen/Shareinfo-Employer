@@ -59,13 +59,15 @@ export const Register = ({ closefun }) => {
   const handleSendOtp = async () => {
     try {
       const response = await axiosInstance.post('/signup/', { email });
-
+      console.log('Response:', response);
       if (response.status === 200) {
-        const setCookieHeader = response.headers['Set-Cookie'];
-        console.log('Set-Cookie Header:', setCookieHeader); 
+        const headersObject = response.headers;
+        const setCookieHeader = headersObject['set-cookie'];
         if (setCookieHeader) {
-          localStorage.setItem('myCookie', setCookieHeader);
-          console.log('Cookie saved to local storage:', localStorage.getItem('myCookie'));
+          // Extract session cookie from Set-Cookie header
+          const sessionCookie = setCookieHeader.split(';')[0];
+          // Store session cookie in localStorage
+          localStorage.setItem('mySessionCookie', sessionCookie);
         }
   
         setResetPassState(2);
@@ -77,13 +79,12 @@ export const Register = ({ closefun }) => {
   };
   
   const handleVerifyOtp = async () => {
-    const storedCookie = localStorage.getItem('myCookie');
+    const storedSessionCookie = localStorage.getItem('mySessionCookie');
     console.log({ otp });
-    console.log('Stored Cookie:', storedCookie); 
     try {
       const response = await axiosInstance.post('/otp-verify/', { otp }, {
         headers: {
-          Cookie: storedCookie,
+          Cookie: storedSessionCookie, // Include session cookie in the headers
         },
       });
       if (response.status === 201) {
@@ -93,11 +94,6 @@ export const Register = ({ closefun }) => {
       console.error('Error verifying OTP:', error);
     }
   };
-  
-  
-  
-  
-  
   
   
 
