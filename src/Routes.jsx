@@ -8,6 +8,8 @@ import { Register } from "./Components/Pages/Register";
 import { AllApplicants } from "./Components/NavlinkPages/AllApplicants";
 import { Shortlisted } from "./Components/NavlinkPages/Shortlisted";
 import { Settings } from "./Components/NavlinkPages/Settings";
+import PrivateRoute from './Components/HOC/PrivateRoute';
+
 
 export const routes = [
   {
@@ -20,7 +22,7 @@ export const routes = [
   },
   {
     path: "dashboard",
-    element: <Dashboard />,
+    element: <PrivateRoute><Dashboard /></PrivateRoute>,
     children: [
       { path: "newjob", element: <NewJob /> },
       { path: "managejob", element: <ManageJobs /> },

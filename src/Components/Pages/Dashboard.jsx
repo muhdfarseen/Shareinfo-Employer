@@ -42,8 +42,9 @@ export const Dashboard = () => {
   };
 
   const HandleLogOut = () => {
-    navigate("/")
-  }
+    localStorage.clear()
+    navigate('/');
+  };
 
   return (
     <AppShell

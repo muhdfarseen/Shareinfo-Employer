@@ -17,25 +17,32 @@ import { useNavigate } from "react-router-dom";
 import { useDisclosure } from "@mantine/hooks";
 import { Register } from "./Register";
 import axiosInstance from "../../Helpers/axios"; 
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
 
 export const Login = () => {
   const navigate = useNavigate();
   const [opened, { open, close }] = useDisclosure(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
 
-  const HandleLogin = async () => {
+  const HandleLogin = async (values) => {
     try {
-      const response = await axiosInstance.post('/login/', { email, password });
-      if (response.status === 201) {
-        // Handle successful login
+      const response = await axiosInstance.post('/login/', values);
+      if (response.status === 200 ) {
+        const { access_token, refresh_token, is_profile_created, full_name } = response.data;
+        
+        localStorage.setItem('access_token', access_token);
+        localStorage.setItem('refresh_token', refresh_token);
+        localStorage.setItem('full_name', full_name);
+        
         navigate("dashboard/newjob");
       }
     } catch (error) {
       console.error('Error logging in:', error);
-      // Handle login error (e.g., show an error message)
+      alert('Error logging in:', error);
     }
   };
+  
+  
 
   return (
     <>
@@ -69,25 +76,50 @@ export const Login = () => {
                 <Title order={2}>Welcome Back</Title>
                 <Text mb={20} c={"dimmed"} size="sm">Please enter your details to sign in</Text>
 
-                <Input.Wrapper my={10} label="Email">
-                  <Input
-                    radius={"lg"}
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Email"
-                  />
-                </Input.Wrapper>
-                <PasswordInput
-                  radius={"lg"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  label="Password"
-                  placeholder="Password"
-                />
+                <Formik
+                  initialValues={{ email: '', password: '' }}
+                  validationSchema={Yup.object({
+                    email: Yup.string()
+                      .email('Invalid email address')
+                      .required('Required'),
+                    password: Yup.string()
+                      .required('Required'),
+                  })}
+                  onSubmit={(values, { setSubmitting }) => {
+                    HandleLogin(values);
+                    setSubmitting(false);
+                  }}
+                >
+                  {({ values, handleChange, handleBlur, handleSubmit, isSubmitting, errors, touched }) => (
+                    <Form onSubmit={handleSubmit}>
+                      <Input.Wrapper my={10} label="Email" error={touched.email && errors.email}>
+                        <Input
+                          radius={"lg"}
+                          name="email"
+                          type="email"
+                          value={values.email}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          placeholder="Email"
+                        />
+                      </Input.Wrapper>
+                      <PasswordInput
+                        radius={"lg"}
+                        name="password"
+                        value={values.password}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        label="Password"
+                        placeholder="Password"
+                        error={touched.password && errors.password}
+                      />
 
-                <Button onClick={HandleLogin} mt={10} fullWidth radius="lg">
-                  Login
-                </Button>
+                      <Button type="submit" mt={10} fullWidth radius="lg" disabled={isSubmitting}>
+                        Login
+                      </Button>
+                    </Form>
+                  )}
+                </Formik>
               </Box>
 
               <Text c={"dimmed"} size="sm">

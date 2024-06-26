@@ -61,38 +61,45 @@ export const Register = ({ closefun }) => {
 
   let setCookieHeader = '';
 
-const handleSendOtp = async () => {
-  try {
-    const response = await axiosInstance.post('/signup/', { email });
-
-    if (response.status === 200) {        
-      setResetPassState(2);
-      setTimer(180);
-
-      // Access headers from the response and store the set-cookie header
-      setCookieHeader = response.headers['set-cookie'];
-      console.log('Response set-cookie:', setCookieHeader);
+  const handleSendOtp = async () => {
+    try {
+      const response = await axiosInstance.post('/signup/', { email });
+  
+      if (response.status === 200) {
+        setResetPassState(2);
+        setTimer(180);
+  
+        // Access 'Set-Cookie' header correctly
+        const cookies = response.headers['set-cookie'];
+        if (cookies) {
+          setCookieHeader = cookies.join('; '); // Join cookies if there are multiple
+          console.log('Response set-cookie:', setCookieHeader);
+        } else {
+          console.error('Set-Cookie header is not present in the response');
+        }
+      }
+    } catch (error) {
+      console.error('Error sending OTP:', error);
     }
-  } catch (error) {
-    console.error('Error sending OTP:', error);
-  }
-};
+  };
+  
 
-const handleVerifyOtp = async () => {
-  try {
-    const response = await axiosInstance.post('/otp-verify/', { otp }, {
-      headers: {
-        Cookie: setCookieHeader,
-      },
-    });
-
-    if (response.status === 201) {
-      setResetPassState(3);
+  const handleVerifyOtp = async () => {
+    try {
+      const response = await axiosInstance.post('/otp-verify/', { otp }, {
+        headers: {
+          'Cookie': setCookieHeader,
+        },
+      });
+  
+      if (response.status === 201) {
+        setResetPassState(3);
+      }
+    } catch (error) {
+      console.error('Error verifying OTP:', error);
     }
-  } catch (error) {
-    console.error('Error verifying OTP:', error);
-  }
-};
+  };
+  
   
   
 
