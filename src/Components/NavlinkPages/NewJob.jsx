@@ -148,6 +148,19 @@ export const NewJob = () => {
         recruitment_end_date: formattedDate,
       };
 
+      // Ensure the payload sends empty strings for disabled fields
+      if (values.experience_type === 'Fresher') {
+        payload.minimum_experience = '';
+      }
+
+      if (values.salary_type === 'Fixed') {
+        payload.maximum_salary = '';
+      } else if (values.salary_type === 'Onwards') {
+        payload.minimum_salary = '';
+      } else if (values.salary_type === 'Range') {
+        // No need to do anything as both fields should be included
+      }
+
       console.log(payload);
 
       const response = await axiosInstance.post('/create-job/', payload, {
@@ -201,15 +214,7 @@ export const NewJob = () => {
           <Form>
             <Group justify='space-between'>
               <Title order={3}>Post a New Job</Title>
-              <Button
-                color='green'
-                size='xs'
-                leftSection={<IconSquareRoundedCheck size={14} />}
-                type="submit"
-                disabled={isSubmitting}
-              >
-                Publish
-              </Button>
+
             </Group>
 
             <Card radius={"md"} mt={10}>
@@ -331,6 +336,7 @@ export const NewJob = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     placeholder=""
+                    disabled={values.salary_type === 'Onwards'}
                   />
                 </Input.Wrapper>
                 <Input.Wrapper label="Maximum Salary" error={touched.maximum_salary && errors.maximum_salary}>
@@ -341,6 +347,7 @@ export const NewJob = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     placeholder=""
+                    disabled={values.salary_type === 'Fixed'}
                   />
                 </Input.Wrapper>
                 <Input.Wrapper label="Job Category" error={touched.job_category && errors.job_category}>
@@ -367,6 +374,7 @@ export const NewJob = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     placeholder=""
+                    disabled={values.experience_type === 'Fresher'}
                   />
                 </Input.Wrapper>
                 <Input.Wrapper label="Educational Qualification" error={touched.educational_qualification && errors.educational_qualification}>
@@ -434,6 +442,19 @@ export const NewJob = () => {
                 />
               </Input.Wrapper>
             </Card>
+
+            <Group my={20} justify='end' >
+              <Button
+                color='green'
+                size='xs'
+                leftSection={<IconSquareRoundedCheck size={14} />}
+                type="submit"
+                disabled={isSubmitting}
+              >
+                Publish
+              </Button>
+            </Group>
+
           </Form>
         )}
       </Formik>
