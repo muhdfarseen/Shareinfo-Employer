@@ -74,18 +74,35 @@ export const MyProfile = () => {
   };
   
 
-  const uploadFileToAzure = async (file) => {
-    const blobServiceClient = new BlobServiceClient(`https://${import.meta.env.VITE_AZURE_STORAGE_ACCOUNT_NAME}.blob.core.windows.net?${import.meta.env.VITE_AZURE_STORAGE_SAS_TOKEN}`);
-    const containerClient = blobServiceClient.getContainerClient(import.meta.env.VITE_AZURE_STORAGE_CONTAINER_NAME);
-    const blockBlobClient = containerClient.getBlockBlobClient(`imiot/${file.name}`);
-  
+ 
+
+
+async function uploadFileToAzure(file) {
+
+  try {
+    const blobServiceClient = new BlobServiceClient(import.meta.env.VITE_BLOBURL);
+
+    const containerName = "logo";
+    const containerClient = blobServiceClient.getContainerClient(containerName);
+    const blobName = `imiot/${file.name}`;
+
+    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
     await blockBlobClient.uploadBrowserData(file);
+
     const uploadedUrl = blockBlobClient.url;
-  
     console.log(`Upload block blob ${file.name} successfully`);
-  
+
     return uploadedUrl;
-  };
+  } catch (error) {
+    console.error("Failed to upload file to Azure Blob Storage", error);
+    throw error; 
+  }
+}
+
+  
+  
+  
+  
   
 
   const handleChange = (e) => {
