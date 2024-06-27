@@ -14,17 +14,22 @@ import { Outlet, useNavigate } from "react-router-dom";
 const data = [
   { id: 1, icon: IconHexagonPlus, label: "Post New Job", path: "newjob" },
   { id: 2, icon: IconBriefcase, label: "Manage Jobs", path: "managejob" },
-  { id: 3, icon: IconAddressBook, label: "All Apllicants", path: "allaplicants" },
+  { id: 3, icon: IconAddressBook, label: "All Applicants", path: "allaplicants" },
   { id: 4, icon: IconCheckbox, label: "Shortlisted", path: "shortlisted" },
   { id: 5, icon: IconUserCircle, label: "My Profile", path: "myprofile" },
   { id: 6, icon: IconSettings, label: "Settings", path: "settings" },
-
 ];
 
 export const Dashboard = () => {
 
+  const isProfileCreated = localStorage.getItem('is_profile_created') === 'true';
+
+  
   const [active, setActive] = useState(() => {
     const savedActiveIndex = localStorage.getItem("activeIndex");
+    if (!isProfileCreated) {
+      return data.findIndex(item => item.path === "myprofile");
+    }
     return savedActiveIndex !== null ? parseInt(savedActiveIndex, 10) : 0;
   });
 
@@ -42,7 +47,7 @@ export const Dashboard = () => {
   };
 
   const HandleLogOut = () => {
-    localStorage.clear()
+    localStorage.clear();
     navigate('/');
   };
 
@@ -57,24 +62,29 @@ export const Dashboard = () => {
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
           <Image h={40} src={"/Logo.svg"} />
 
-          <Button onClick={HandleLogOut} variant="light" color="red" size="xs" >Log Out</Button>
+          <Button onClick={HandleLogOut} variant="light" color="red" size="xs">Log Out</Button>
         </Group>
       </AppShell.Header>
       <AppShell.Navbar p="md">
-        {data.map((item, index) => (
-          <NavLink
-            variant="filled"
-            key={item.label}
-            label={item.label}
-            active={index === active}
-            onClick={(event) => { handleLinkClick(event, index); toggle(); }}
-            leftSection={<item.icon size="1rem" stroke={1.5} />}
-            style={{ borderRadius: "7px" }}
-            color="blue"
-          />
-        ))}
+        {data.map((item, index) => {
+          if (!isProfileCreated && item.path !== "myprofile") {
+            return null;
+          }
+          return (
+            <NavLink
+              variant="filled"
+              key={item.label}
+              label={item.label}
+              active={index === active}
+              onClick={(event) => { handleLinkClick(event, index); toggle(); }}
+              leftSection={<item.icon size="1rem" stroke={1.5} />}
+              style={{ borderRadius: "7px" }}
+              color="blue"
+            />
+          );
+        })}
       </AppShell.Navbar>
-      <AppShell.Main bg={"var(--code-bg, var(--mantine-color-gray-1))"}  >
+      <AppShell.Main bg={"var(--code-bg, var(--mantine-color-gray-1))"}>
         <Outlet />
       </AppShell.Main>
     </AppShell>

@@ -33,7 +33,8 @@ export const Login = () => {
         localStorage.setItem('access_token', access_token);
         localStorage.setItem('refresh_token', refresh_token);
         localStorage.setItem('full_name', full_name);
-        
+        localStorage.setItem('is_profile_created', is_profile_created);
+
         navigate("dashboard/newjob");
       }
     } catch (error) {

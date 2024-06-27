@@ -9,7 +9,7 @@ import { AllApplicants } from "./Components/NavlinkPages/AllApplicants";
 import { Shortlisted } from "./Components/NavlinkPages/Shortlisted";
 import { Settings } from "./Components/NavlinkPages/Settings";
 import PrivateRoute from './Components/HOC/PrivateRoute';
-
+import ProfileCompletionCheck from './Components/HOC/ProfileCompletionCheck'
 
 export const routes = [
   {
@@ -24,12 +24,12 @@ export const routes = [
     path: "dashboard",
     element: <PrivateRoute><Dashboard /></PrivateRoute>,
     children: [
-      { path: "newjob", element: <NewJob /> },
-      { path: "managejob", element: <ManageJobs /> },
+      { path: "newjob", element: <ProfileCompletionCheck> <NewJob /> </ProfileCompletionCheck> },
+      { path: "managejob", element: <ProfileCompletionCheck> <ManageJobs /> </ProfileCompletionCheck>  },
       { path: "myprofile", element: <MyProfile /> },
-      { path: "allaplicants", element: <AllApplicants /> },
-      { path: "shortlisted", element: <Shortlisted/> },
-      { path: "settings", element: <Settings/> }
+      { path: "allaplicants", element: <ProfileCompletionCheck> <AllApplicants /> </ProfileCompletionCheck>  },
+      { path: "shortlisted", element: <ProfileCompletionCheck> <Shortlisted/> </ProfileCompletionCheck>  },
+      { path: "settings", element: <ProfileCompletionCheck> <Settings/> </ProfileCompletionCheck>  }
     ],
   },
 ];

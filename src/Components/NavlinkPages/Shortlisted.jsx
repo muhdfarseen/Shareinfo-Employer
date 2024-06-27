@@ -68,7 +68,7 @@ export const Shortlisted = () => {
                     verticalSpacing={{ base: 'md', sm: 'md' }}
                 >
                     {data.map((item, index) => (
-                        <Card onClick={open} className='hoverclassscale' radius={"lg"} withBorder >
+                        <Card key={index} onClick={open} className='hoverclassscale' radius={"lg"} withBorder >
                             <Flex gap={10} key={index} align="flex-start">
                                 <Image radius={"xl"} h={50} w={50} src={item.image} alt={item.name} />
                                 <Flex gap={3} direction="column">
