@@ -6,6 +6,7 @@ import axiosInstance from "../../Helpers/axios";
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 
+
 const SALARY_TYPE = [
   { value: 'Fixed', label: 'Fixed' },
   { value: 'Onwards', label: 'Onwards' },
@@ -204,7 +205,7 @@ export const NewJob = () => {
           no_of_vacancies: '',
           required_skills: '',
           location: '',
-          recruitment_end_date: null,
+          recruitment_end_date: new Date(),
           domain: '',
         }}
         validationSchema={jobSchema}
@@ -429,6 +430,7 @@ export const NewJob = () => {
                   value={values.recruitment_end_date}
                   onChange={(date) => setFieldValue('recruitment_end_date', date)}
                   error={touched.recruitment_end_date && errors.recruitment_end_date}
+                  onBlur={handleBlur}
                 />
               </SimpleGrid>
 
