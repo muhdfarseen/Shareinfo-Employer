@@ -110,35 +110,35 @@ export const NewJob = () => {
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       const accessToken = localStorage.getItem('access_token');
-
+  
       const formattedDate = values.recruitment_end_date instanceof Date
         ? values.recruitment_end_date.toISOString().slice(0, 10)
         : values.recruitment_end_date;
-
+  
       const minQualifications = values.min_qualification.split(',').reduce((acc, curr, index) => {
         acc[index + 1] = curr.trim();
         return acc;
       }, {});
-
+  
       const perksBenefits = values.perks_benefits.split(',').reduce((acc, curr, index) => {
         acc[index + 1] = curr.trim();
         return acc;
       }, {});
-
+  
       const requiredSkills = values.required_skills.split(',').reduce((acc, curr, index) => {
         acc[index + 1] = curr.trim();
         return acc;
       }, {});
-
+  
       const location = values.location.split(',').reduce((acc, curr, index) => {
         acc[index + 1] = curr.trim();
         return acc;
       }, {});
-
+  
       const jobDescription = {
         1: values.job_description.trim()
       };
-
+  
       const payload = {
         ...values,
         min_qualification: minQualifications,
@@ -147,29 +147,19 @@ export const NewJob = () => {
         location: location,
         job_description: jobDescription,
         recruitment_end_date: formattedDate,
+        minimum_salary: values.salary_type === 'Onwards' ? null : values.minimum_salary,
+        maximum_salary: values.salary_type === 'Fixed' ? null : values.maximum_salary,
+        minimum_experience: values.experience_type === 'Fresher' ? null : values.minimum_experience,
       };
-
-      // Ensure the payload sends empty strings for disabled fields
-      if (values.experience_type === 'Fresher') {
-        payload.minimum_experience = '';
-      }
-
-      if (values.salary_type === 'Fixed') {
-        payload.maximum_salary = '';
-      } else if (values.salary_type === 'Onwards') {
-        payload.minimum_salary = '';
-      } else if (values.salary_type === 'Range') {
-        // No need to do anything as both fields should be included
-      }
-
+  
       console.log(payload);
-
+  
       const response = await axiosInstance.post('/create-job/', payload, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-
+  
       if (response.status === 201 || response.status === 200) {
         alert('Job posted successfully');
       }
@@ -178,6 +168,7 @@ export const NewJob = () => {
     }
     setSubmitting(false);
   };
+  
 
 
   if (loading) return <p>Loading...</p>;
