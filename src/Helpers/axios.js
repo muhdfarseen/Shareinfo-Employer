@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 const csrfToken = Cookies.get('csrftoken');
 
 const axiosInstance = axios.create({
-  baseURL: "https://dev.shareinfo.io/employer",
+  baseURL: import.meta.env.VITE_BASEURL,
   headers: {
     "X-CSRFToken": csrfToken,
     "Content-Type": "application/json",

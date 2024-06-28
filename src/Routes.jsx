@@ -1,15 +1,37 @@
+import React from 'react'
 import { BrowserRouter } from "react-router-dom";
-import { Login } from "./Components/Pages/Login";
-import { Dashboard } from "./Components/Pages/Dashboard";
-import { NewJob } from "./Components/NavlinkPages/NewJob";
-import { ManageJobs } from "./Components/NavlinkPages/ManageJobs";
-import { MyProfile } from "./Components/NavlinkPages/MyProfile";
-import { Register } from "./Components/Pages/Register";
-import { AllApplicants } from "./Components/NavlinkPages/AllApplicants";
-import { Shortlisted } from "./Components/NavlinkPages/Shortlisted";
-import { Settings } from "./Components/NavlinkPages/Settings";
+import { lazy, Suspense } from 'react'
+
+import { NotFound } from "./Components/Pages/NotFound";
+import { LoadingScreen } from "./Components/Pages/LoadingScreen";
+
 import PrivateRoute from './Components/HOC/PrivateRoute';
 import ProfileCompletionCheck from './Components/HOC/ProfileCompletionCheck'
+
+
+const Loadable = (Component) => (props) => (
+  <Suspense fallback={<LoadingScreen />}>
+    {React.createElement(Component, props)}
+  </Suspense>
+)
+
+//lazy loading components begin -------------------
+
+const Login = Loadable(lazy(() => import("./Components/Pages/Login").then(module => ({ default: module.Login }))));
+const Dashboard = Loadable(lazy(() => import("./Components/Pages/Dashboard").then(module => ({ default: module.Dashboard }))));
+const Register = Loadable(lazy(() => import("./Components/Pages/Register").then(module => ({ default: module.Register }))));
+
+const Home = Loadable(lazy(() => import("./Components/NavlinkPages/Home").then(module => ({ default: module.Home }))));
+const NewJob = Loadable(lazy(() => import("./Components/NavlinkPages/NewJob").then(module => ({ default: module.NewJob }))));
+const ManageJobs = Loadable(lazy(() => import("./Components/NavlinkPages/ManageJobs").then(module => ({ default: module.ManageJobs }))));
+const MyProfile = Loadable(lazy(() => import("./Components/NavlinkPages/MyProfile").then(module => ({ default: module.MyProfile }))));
+const AllApplicants = Loadable(lazy(() => import("./Components/NavlinkPages/AllApplicants").then(module => ({ default: module.AllApplicants }))));
+const Shortlisted = Loadable(lazy(() => import("./Components/NavlinkPages/Shortlisted").then(module => ({ default: module.Shortlisted }))));
+const Settings = Loadable(lazy(() => import("./Components/NavlinkPages/Settings").then(module => ({ default: module.Settings }))));
+
+//lazy loading components end -------------------
+
+
 
 export const routes = [
   {
@@ -24,6 +46,7 @@ export const routes = [
     path: "dashboard",
     element: <PrivateRoute><Dashboard /></PrivateRoute>,
     children: [
+      { path: "home", element: <ProfileCompletionCheck> <Home/> </ProfileCompletionCheck> },
       { path: "newjob", element: <ProfileCompletionCheck> <NewJob /> </ProfileCompletionCheck> },
       { path: "managejob", element: <ProfileCompletionCheck> <ManageJobs /> </ProfileCompletionCheck>  },
       { path: "myprofile", element: <MyProfile /> },
@@ -32,6 +55,10 @@ export const routes = [
       { path: "settings", element: <ProfileCompletionCheck> <Settings/> </ProfileCompletionCheck>  }
     ],
   },
+  {
+    path: '*',
+    element: <NotFound/>
+  }
 ];
 
 const createBrowserRouter = BrowserRouter;

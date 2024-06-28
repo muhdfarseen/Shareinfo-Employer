@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import {
   IconHexagonPlus,
   IconBriefcase,
+  IconHome,
   IconUserCircle,
   IconCheckbox,
   IconAddressBook,
@@ -12,6 +13,7 @@ import {
 import { Outlet, useNavigate } from "react-router-dom";
 
 const data = [
+  { id: 0, icon: IconHome, label: "Home", path: "home" },
   { id: 1, icon: IconHexagonPlus, label: "Post New Job", path: "newjob" },
   { id: 2, icon: IconBriefcase, label: "Manage Jobs", path: "managejob" },
   // { id: 3, icon: IconAddressBook, label: "All Applicants", path: "allaplicants" },
@@ -24,7 +26,7 @@ export const Dashboard = () => {
 
   const isProfileCreated = localStorage.getItem('is_profile_created') === 'true';
 
-  
+
   const [active, setActive] = useState(() => {
     const savedActiveIndex = localStorage.getItem("activeIndex");
     if (!isProfileCreated) {

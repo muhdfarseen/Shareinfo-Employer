@@ -169,11 +169,6 @@ export const NewJob = () => {
     }
     setSubmitting(false);
   };
-  
-
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error fetching domain list: {error.message}</p>;
 
   return (
     <>
@@ -230,7 +225,7 @@ export const NewJob = () => {
                 value={values.job_description}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                placeholder="In this dynamic role, you will be responsible for [brief, attention-grabbing description of 2-3 key responsibilities]. You will play a crucial part in [explain how this role contributes to the team/company's success]."
+                placeholder="In this dynamic role, you will be responsible for [brief, attention-grabbing description of 2-3 key responsibilities]. You will play a crucial part in [explain how this role contributes to the team/company's success."
                 error={touched.job_description && errors.job_description}
               />
 
