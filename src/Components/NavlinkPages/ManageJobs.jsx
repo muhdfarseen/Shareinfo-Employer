@@ -1,24 +1,45 @@
-import { useState, useEffect } from 'react';
-import { Title, Table, Textarea, Input, Text, Card, Modal, Image, SimpleGrid, Button, Group, Box, Badge, ActionIcon, Flex, Switch } from '@mantine/core';
-import { IconEye, IconTrash, IconEdit } from '@tabler/icons-react';
-import { useDisclosure } from '@mantine/hooks';
-import { IconSquareRoundedCheck } from '@tabler/icons-react';
-import { DateInput } from '@mantine/dates';
-import axiosInstance from '../../Helpers/axios';
+import { useState, useEffect } from "react";
+import {
+  Title,
+  Table,
+  Textarea,
+  Input,
+  Text,
+  Card,
+  Modal,
+  Image,
+  SimpleGrid,
+  Button,
+  Group,
+  Box,
+  Badge,
+  ActionIcon,
+  Flex,
+  Switch,
+} from "@mantine/core";
+import { IconEye, IconTrash, IconEdit } from "@tabler/icons-react";
+import { useDisclosure } from "@mantine/hooks";
+import { IconSquareRoundedCheck } from "@tabler/icons-react";
+import { DateInput } from "@mantine/dates";
+import axiosInstance from "../../Helpers/axios";
 
 export const ManageJobs = () => {
-  const [deleteModalOpened, { open: openDeleteModal, close: closeDeleteModal }] = useDisclosure(false);
-  const [editModalOpened, { open: openEditModal, close: closeEditModal }] = useDisclosure(false);
+  const [
+    deleteModalOpened,
+    { open: openDeleteModal, close: closeDeleteModal },
+  ] = useDisclosure(false);
+  const [editModalOpened, { open: openEditModal, close: closeEditModal }] =
+    useDisclosure(false);
   const [jobs, setJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
 
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axiosInstance.get('/job-list/');
+        const response = await axiosInstance.get("/job-list/");
         setJobs(response.data);
       } catch (error) {
-        console.error('Error fetching jobs:', error);
+        console.error("Error fetching jobs:", error);
       }
     };
 
@@ -38,24 +59,38 @@ export const ManageJobs = () => {
   const rows = jobs.map((job) => (
     <Table.Tr key={job.job_id}>
       <Table.Td>{job.job_title}</Table.Td>
-      <Table.Td>{job.recruitment_start_date} to {job.recruitment_end_date}</Table.Td>
+      <Table.Td>
+        {job.recruitment_start_date} to {job.recruitment_end_date}
+      </Table.Td>
       <Table.Td>{job.working_mode}</Table.Td>
       <Table.Td>{job.preference}</Table.Td>
       <Table.Td>{job.location}</Table.Td>
 
-
       <Table.Td>{job.applied_count}</Table.Td>
+      
 
-
-      <Table.Td>
+      {/* <Table.Td>
         <Group gap={10}>
-          <ActionIcon variant="light" color="gray" aria-label="Edit" onClick={() => handleEditClick(job)}>
-            <IconEdit style={{ width: '70%', height: '70%' }} stroke={1.5} />
+          <ActionIcon
+            variant="light"
+            color="gray"
+            aria-label="Edit"
+            onClick={() => handleEditClick(job)}
+          >
+            <IconEdit style={{ width: "70%", height: "70%" }} stroke={1.5} />
           </ActionIcon>
-          <ActionIcon variant="light" color="red" aria-label="Delete" onClick={() => handleDeleteClick(job)}>
-            <IconTrash style={{ width: '70%', height: '70%' }} stroke={1.5} />
+          <ActionIcon
+            variant="light"
+            color="red"
+            aria-label="Delete"
+            onClick={() => handleDeleteClick(job)}
+          >
+            <IconTrash style={{ width: "70%", height: "70%" }} stroke={1.5} />
           </ActionIcon>
-        </Group></Table.Td>
+        </Group>
+      </Table.Td> */}
+
+
     </Table.Tr>
   ));
 
@@ -63,7 +98,7 @@ export const ManageJobs = () => {
     <>
       <Title order={3}>Manage Jobs</Title>
       <Card radius={"md"} mt={10}>
-        <Table withRowBorders={false} verticalSpacing="md" >
+        <Table withRowBorders={false} verticalSpacing="md">
           <Table.Thead>
             <Table.Tr>
               <Table.Th>Title</Table.Th>
@@ -72,8 +107,7 @@ export const ManageJobs = () => {
               <Table.Th>Preference</Table.Th>
               <Table.Th>Location</Table.Th>
               <Table.Th>Applications</Table.Th>
-              <Table.Th>Quick Action</Table.Th>
-
+              {/* <Table.Th>Quick Action</Table.Th> */}
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>{rows}</Table.Tbody>
@@ -81,7 +115,12 @@ export const ManageJobs = () => {
       </Card>
 
       {/* Delete Confirmation Modal */}
-      <Modal size="auto" opened={deleteModalOpened} onClose={closeDeleteModal} withCloseButton={false}>
+      <Modal
+        size="auto"
+        opened={deleteModalOpened}
+        onClose={closeDeleteModal}
+        withCloseButton={false}
+      >
         <Flex gap={20} align="center" justify="center">
           <Text>Are you sure to delete this Job post?</Text>
           <Button onClick={closeDeleteModal} size="xs" color="red">
@@ -91,16 +130,24 @@ export const ManageJobs = () => {
       </Modal>
 
       {/* Edit Modal */}
-      <Modal size="auto" opened={editModalOpened} onClose={closeEditModal} withCloseButton={false}>
+      <Modal
+        size="auto"
+        opened={editModalOpened}
+        onClose={closeEditModal}
+        withCloseButton={false}
+      >
         {selectedJob && (
           <>
             <Group justify="space-between">
               <Title order={3}>Edit Job</Title>
-              <Switch
-                defaultChecked
-                label="Active / Inactive"
-              />
-              <Button color="green" size="xs" leftSection={<IconSquareRoundedCheck size={14} />}>Save</Button>
+              <Switch defaultChecked label="Active / Inactive" />
+              <Button
+                color="green"
+                size="xs"
+                leftSection={<IconSquareRoundedCheck size={14} />}
+              >
+                Save
+              </Button>
             </Group>
 
             <Card radius="md" mt={10}>
@@ -119,8 +166,8 @@ export const ManageJobs = () => {
               <SimpleGrid
                 mt={10}
                 cols={{ base: 1, sm: 2, lg: 3 }}
-                spacing={{ base: 10, sm: 'xl' }}
-                verticalSpacing={{ base: 'md', sm: 'xl' }}
+                spacing={{ base: 10, sm: "xl" }}
+                verticalSpacing={{ base: "md", sm: "xl" }}
               >
                 <Input.Wrapper label="Job Level">
                   <Input placeholder="" />
@@ -133,20 +180,15 @@ export const ManageJobs = () => {
                 </Input.Wrapper>
               </SimpleGrid>
 
-              <Textarea
-                mt={10}
-                label="Perks & Benefits"
-                autosize
-                minRows={2}
-              />
+              <Textarea mt={10} label="Perks & Benefits" autosize minRows={2} />
             </Card>
 
             <Card radius="md" mt={20}>
               <SimpleGrid
                 mt={10}
                 cols={{ base: 1, sm: 2, lg: 3 }}
-                spacing={{ base: 10, sm: 'xl' }}
-                verticalSpacing={{ base: 'md', sm: 'md' }}
+                spacing={{ base: 10, sm: "xl" }}
+                verticalSpacing={{ base: "md", sm: "md" }}
               >
                 <Input.Wrapper label="Salary Type">
                   <Input placeholder="" />
@@ -184,8 +226,8 @@ export const ManageJobs = () => {
               <SimpleGrid
                 mt={10}
                 cols={{ base: 1, sm: 2, lg: 3 }}
-                spacing={{ base: 10, sm: 'xl' }}
-                verticalSpacing={{ base: 'md', sm: 'xl' }}
+                spacing={{ base: 10, sm: "xl" }}
+                verticalSpacing={{ base: "md", sm: "xl" }}
               >
                 <Input.Wrapper label="Job Location">
                   <Input placeholder="" />

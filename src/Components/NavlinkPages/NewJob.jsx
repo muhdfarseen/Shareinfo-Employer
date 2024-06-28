@@ -162,6 +162,7 @@ export const NewJob = () => {
   
       if (response.status === 201 || response.status === 200) {
         alert('Job posted successfully');
+        window.location.reload();
       }
     } catch (error) {
       alert('Failed to create job. Please try again.');
