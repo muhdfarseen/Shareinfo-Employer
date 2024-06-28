@@ -371,7 +371,7 @@ export const MyProfile = () => {
               disabled={!isEditMode}
             />
           </Input.Wrapper>
-          <Input.Wrapper label="Branches">
+          <Input.Wrapper label="Branches" description="Enter comma separated values" >
             <Input
               name="branches"
               value={profileData.branches}

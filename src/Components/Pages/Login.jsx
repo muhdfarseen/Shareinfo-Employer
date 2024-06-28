@@ -62,13 +62,14 @@ export const Login = () => {
             <Flex
               w={{ base: "280px", sm: "320px" }}
               direction={"column"}
-              justify={"space-between"}
+              justify={"center"}
+              gap={40}
               padding="lg"
               radius="xl"
               h={"80dvh"}
             >
               <Image
-                w={140}
+                w={180}
                 h={"100dvh"}
                 src={"/Logo.svg"}
               />

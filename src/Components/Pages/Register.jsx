@@ -199,7 +199,7 @@ const handleRegister = async () => {
         return (
           <>
             <Flex gap={10} direction={"column"}>
-              <Input.Wrapper size="xs" flex={1} label="New Password">
+              <Input.Wrapper size="xs" flex={1} label="Create Password">
                 <PasswordInput
                   autoFocus
                   radius={"lg"}
