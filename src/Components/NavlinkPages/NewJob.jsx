@@ -147,7 +147,7 @@ export const NewJob = () => {
         location: location,
         job_description: jobDescription,
         recruitment_end_date: formattedDate,
-        minimum_salary: values.salary_type === 'Onwards' ? null : values.minimum_salary,
+        minimum_salary: values.minimum_salary,
         maximum_salary: values.salary_type === 'Fixed' ? null : values.maximum_salary,
         minimum_experience: values.experience_type === 'Fresher' ? null : values.minimum_experience,
       };
@@ -328,7 +328,6 @@ export const NewJob = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     placeholder=""
-                    disabled={values.salary_type === 'Onwards'}
                   />
                 </Input.Wrapper>
                 <Input.Wrapper label="Maximum Salary" error={touched.maximum_salary && errors.maximum_salary}>
@@ -339,7 +338,7 @@ export const NewJob = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     placeholder=""
-                    disabled={values.salary_type === 'Fixed'}
+                    disabled={values.salary_type === 'Fixed' || values.salary_type === 'Onwards' }
                   />
                 </Input.Wrapper>
                 <Input.Wrapper label="Job Category" error={touched.job_category && errors.job_category}>
