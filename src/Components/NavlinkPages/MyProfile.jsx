@@ -162,6 +162,7 @@ export const MyProfile = () => {
         localStorage.setItem("is_profile_created", true);
       }
       console.log("Profile updated successfully");
+      window.location.reload();
     } catch (error) {
       console.error("Failed to update profile", error);
       alert("Failed to update profile");
