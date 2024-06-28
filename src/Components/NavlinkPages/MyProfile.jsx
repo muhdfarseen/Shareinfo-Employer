@@ -51,9 +51,9 @@ export const MyProfile = () => {
           },
         });
         setProfileData(response.data);
-        console.log(response.data);
+        // console.log(response.data);
       } catch (error) {
-        console.error("Failed to fetch profile data", error);
+        // console.error("Failed to fetch profile data", error);
       }
     };
 
@@ -79,7 +79,7 @@ export const MyProfile = () => {
 
       // Handle any additional logic after successful upload, if needed
     } catch (error) {
-      console.error("Failed to upload logo", error);
+      // console.error("Failed to upload logo", error);
     }
   };
 
@@ -98,11 +98,11 @@ export const MyProfile = () => {
       await blockBlobClient.uploadBrowserData(file);
 
       const uploadedUrl = blockBlobClient.url;
-      console.log(`Upload block blob ${file.name} successfully`);
+      // console.log(`Upload block blob ${file.name} successfully`);
 
       return uploadedUrl;
     } catch (error) {
-      console.error("Failed to upload file to Azure Blob Storage", error);
+      // console.error("Failed to upload file to Azure Blob Storage", error);
       throw error;
     }
   }
@@ -144,7 +144,7 @@ export const MyProfile = () => {
       branches: formattedBranches,
     };
 
-    console.log("uploading new data :", updatedProfileData);
+    // console.log("uploading new data :", updatedProfileData);
 
     try {
       if (isProfileCreated) {
@@ -161,10 +161,10 @@ export const MyProfile = () => {
         });
         localStorage.setItem("is_profile_created", true);
       }
-      console.log("Profile updated successfully");
+      // console.log("Profile updated successfully");
       window.location.reload();
     } catch (error) {
-      console.error("Failed to update profile", error);
+      // console.error("Failed to update profile", error);
       alert("Failed to update profile");
       return;
     }

@@ -64,7 +64,7 @@ export const Register = ({ closefun }) => {
             setTimer(180);
         }
     } catch (error) {
-        console.error("Error sending OTP:", error);
+        // console.error("Error sending OTP:", error);
     }
 };
 
@@ -75,7 +75,7 @@ const handleVerifyOtp = async () => {
             setResetPassState(3);
         }
     } catch (error) {
-        console.error("Error verifying OTP:", error);
+        // console.error("Error verifying OTP:", error);
     }
 };
 
@@ -95,7 +95,7 @@ const handleRegister = async () => {
             closefun();
         }
     } catch (error) {
-        console.error("Error creating password:", error);
+        // console.error("Error creating password:", error);
     }
 };
 

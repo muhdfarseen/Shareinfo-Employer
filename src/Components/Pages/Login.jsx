@@ -38,7 +38,7 @@ export const Login = () => {
         navigate("dashboard/newjob");
       }
     } catch (error) {
-      console.error('Error logging in:', error);
+      // console.error('Error logging in:', error);
       alert('Error logging in:', error);
     }
   };

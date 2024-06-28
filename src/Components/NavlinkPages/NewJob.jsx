@@ -152,7 +152,7 @@ export const NewJob = () => {
         minimum_experience: values.experience_type === 'Fresher' ? null : values.minimum_experience,
       };
   
-      console.log(payload);
+      // console.log(payload);
   
       const response = await axiosInstance.post('/create-job/', payload, {
         headers: {

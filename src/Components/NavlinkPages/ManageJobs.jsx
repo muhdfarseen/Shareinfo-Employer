@@ -39,7 +39,7 @@ export const ManageJobs = () => {
         const response = await axiosInstance.get("/job-list/");
         setJobs(response.data);
       } catch (error) {
-        console.error("Error fetching jobs:", error);
+        // console.error("Error fetching jobs:", error);
       }
     };
 
