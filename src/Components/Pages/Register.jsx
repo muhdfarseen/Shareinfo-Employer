@@ -16,11 +16,11 @@ export const Register = ({ closefun }) => {
   const [resetPassState, setResetPassState] = useState(1);
   const [timer, setTimer] = useState(180);
   const [ThreeclickConstrain, setThreeclickConstrain] = useState(0);
-  const [email, setEmail] = useState('');
-  const [otp, setOtp] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [userType, setUserType] = useState('Employer'); 
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [userType, setUserType] = useState("Employer");
 
   const [resendActive, setResendActive] = useState(false);
   const [timerresend, setTimerresend] = useState(0);
@@ -56,135 +56,90 @@ export const Register = ({ closefun }) => {
     }
   }, [resendActive, timerresend]);
 
-
-
-
-  let setCookieHeader = '';
-
   const handleSendOtp = async () => {
     try {
-      const response = await axiosInstance.post('/signup/', { email });
-  
-      if (response.status === 200) {
-        setResetPassState(2);
-        setTimer(180);
-  
-        // Access 'Set-Cookie' header correctly
-        const cookies = response.headers['set-cookie'];
-        if (cookies) {
-          setCookieHeader = cookies.join('; '); // Join cookies if there are multiple
-          console.log('Response set-cookie:', setCookieHeader);
-        } else {
-          console.error('Set-Cookie header is not present in the response');
+        const response = await axiosInstance.post("/signup/", { email });
+        if (response.status === 200) {
+            setResetPassState(2);
+            setTimer(180);
         }
-      }
     } catch (error) {
-      console.error('Error sending OTP:', error);
+        console.error("Error sending OTP:", error);
     }
-  };
-  
+};
 
-  const handleVerifyOtp = async () => {
+const handleVerifyOtp = async () => {
     try {
-      const response = await axiosInstance.post('/otp-verify/', { otp }, {
-        headers: {
-          'Cookie': setCookieHeader,
-        },
-      });
-  
-      if (response.status === 201) {
-        setResetPassState(3);
-      }
+        const response = await axiosInstance.post("/otp-verify/", { otp });
+        if (response.status === 200) {
+            setResetPassState(3);
+        }
     } catch (error) {
-      console.error('Error verifying OTP:', error);
+        console.error("Error verifying OTP:", error);
     }
-  };
-  
-  
-  
+};
 
-  const handleRegister = async () => {
+const handleRegister = async () => {
     if (password !== confirmPassword) {
-      alert('Passwords do not match');
-      return;
+        alert("Passwords do not match");
+        return;
     }
 
     try {
-      const response = await axiosInstance.post('/password/', {
-        password,
-        user_type: userType
-      });
+        const response = await axiosInstance.post("/password/", {
+            password,
+            user_type: userType,
+        });
 
-      if (response.status === 201) {
-        closefun();
-      }
+        if (response.status === 200) {
+            closefun();
+        }
     } catch (error) {
-      console.error('Error creating password:', error);
+        console.error("Error creating password:", error);
     }
-  };
+};
+
 
   const renderContent = () => {
     switch (resetPassState) {
       case 1:
         return (
-          <Flex gap={10} direction={'column'}>
+          <Flex gap={10} direction={"column"}>
             <Input.Wrapper size="xs" label="Email">
               <Input
-                radius={'lg'}
+                radius={"lg"}
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </Input.Wrapper>
-            <Button
-              fullWidth
-              color="blue"
-              radius="lg"
-              onClick={handleSendOtp}
-            >
+            <Button fullWidth color="blue" radius="lg" onClick={handleSendOtp}>
               Send OTP
             </Button>
           </Flex>
         );
       case 2:
         return (
-          <Flex gap={10} direction={'column'}>
+          <Flex gap={10} direction={"column"}>
             <Box>
-              <Flex mb={5} justify={'space-between'}>
+              <Flex mb={5} justify={"space-between"}>
                 <Text fw={500} size="xs">
                   Enter OTP
                 </Text>
-                <Text c={'blue'} fw={500} size="xs">
+                <Text c={"blue"} fw={500} size="xs">
                   {Math.floor(timer / 60)
                     .toString()
-                    .padStart(2, '0')}
-                  :{(timer % 60).toString().padStart(2, '0')}
+                    .padStart(2, "0")}
+                  :{(timer % 60).toString().padStart(2, "0")}
                 </Text>
               </Flex>
 
-              {/* <PinInput
-                flex={1}
-                size="lg"
-                placeholder=""
-                radius={'sm'}
-                type="number"
-                length={4}
-                autoFocus
-                value={otp}
-                
-                onChange={setOtp}
-              /> */}
-
               <Input
-                radius={'lg'}
-                placeholder="Email"
+                radius={"lg"}
+                placeholder="OTP"
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
               />
-
-
-
-
             </Box>
 
             <Button
@@ -198,10 +153,10 @@ export const Register = ({ closefun }) => {
 
             {ThreeclickConstrain <= 3 ? (
               <>
-                <Text ta={'center'} fw={500} size="xs">
-                  Didn't get the code?{' '}
+                <Text ta={"center"} fw={500} size="xs">
+                  Didn't get the code?{" "}
                   <Anchor
-                    ta={'center'}
+                    ta={"center"}
                     size="xs"
                     fw={500}
                     onClick={() => {
@@ -213,27 +168,27 @@ export const Register = ({ closefun }) => {
                       }
                     }}
                     style={{
-                      cursor: timerresend === 0 ? 'pointer' : 'not-allowed',
-                      color: timerresend === 0 ? '' : 'gray',
+                      cursor: timerresend === 0 ? "pointer" : "not-allowed",
+                      color: timerresend === 0 ? "" : "gray",
                     }}
                   >
                     resend
                   </Anchor>
                   {resendActive == false && (
                     <>
-                      {' ('}
+                      {" ("}
                       {Math.floor(timerresend / 60)
                         .toString()
-                        .padStart(2, '0')}
-                      :{(timerresend % 60).toString().padStart(2, '0')}
-                      {')'}
+                        .padStart(2, "0")}
+                      :{(timerresend % 60).toString().padStart(2, "0")}
+                      {")"}
                     </>
                   )}
                 </Text>
               </>
             ) : (
               <>
-                <Text c={'red'} ta={'center'} fw={500} size="xs">
+                <Text c={"red"} ta={"center"} fw={500} size="xs">
                   You have tried 3 times, Try again in 5 minutes
                 </Text>
               </>
@@ -243,11 +198,11 @@ export const Register = ({ closefun }) => {
       case 3:
         return (
           <>
-            <Flex gap={10} direction={'column'}>
+            <Flex gap={10} direction={"column"}>
               <Input.Wrapper size="xs" flex={1} label="New Password">
                 <PasswordInput
                   autoFocus
-                  radius={'lg'}
+                  radius={"lg"}
                   size="sm"
                   placeholder="New Password"
                   value={password}
@@ -257,7 +212,7 @@ export const Register = ({ closefun }) => {
 
               <Input.Wrapper size="xs" flex={1} label="Confirm Password">
                 <PasswordInput
-                  radius={'lg'}
+                  radius={"lg"}
                   size="sm"
                   placeholder="Confirm Password"
                   value={confirmPassword}
