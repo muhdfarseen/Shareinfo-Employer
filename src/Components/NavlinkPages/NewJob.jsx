@@ -223,7 +223,7 @@ export const NewJob = () => {
           no_of_vacancies: "",
           required_skills: "",
           location: "",
-          recruitment_end_date: new Date(),
+          recruitment_end_date: "",
           domain: "",
         }}
         validationSchema={jobSchema}
