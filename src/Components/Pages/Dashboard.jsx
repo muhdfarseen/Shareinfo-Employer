@@ -10,7 +10,7 @@ import {
   IconAddressBook,
   IconSettings
 } from "@tabler/icons-react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 
 const data = [
   { id: 0, icon: IconHome, label: "Home", path: "home" },
@@ -23,10 +23,7 @@ const data = [
 ];
 
 export const Dashboard = () => {
-
   const isProfileCreated = localStorage.getItem('is_profile_created') === 'true';
-
-
   const [active, setActive] = useState(() => {
     const savedActiveIndex = localStorage.getItem("activeIndex");
     if (!isProfileCreated) {
@@ -37,6 +34,15 @@ export const Dashboard = () => {
 
   const [opened, { toggle }] = useDisclosure();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const path = location.pathname.replace('/dashboard/', ''); // Extract path after '/dashboard/'
+    const index = data.findIndex(item => item.path === path);
+    if (index !== -1) {
+      setActive(index);
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     localStorage.setItem("activeIndex", active);
@@ -63,7 +69,6 @@ export const Dashboard = () => {
         <Group justify="space-between" h="100%" px="md">
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
           <Image h={40} src={"/Logo.svg"} />
-
           <Button onClick={HandleLogOut} variant="light" color="red" size="xs">Log Out</Button>
         </Group>
       </AppShell.Header>
