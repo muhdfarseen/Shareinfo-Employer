@@ -184,25 +184,6 @@ export const MyProfile = () => {
     <>
       <Group justify="space-between">
         <Title order={3}>My Profile</Title>
-        {isEditMode ? (
-          <Button
-            color="green"
-            size="xs"
-            leftSection={<IconSquareRoundedCheck size={14} />}
-            onClick={toggleEditMode}
-          >
-            Save
-          </Button>
-        ) : (
-          <Button
-            variant="default"
-            size="xs"
-            leftSection={<IconEdit size={14} />}
-            onClick={toggleEditMode}
-          >
-            Edit
-          </Button>
-        )}
       </Group>
 
       {!isProfileCreated && (
@@ -265,7 +246,10 @@ export const MyProfile = () => {
             aria-label="Settings"
             radius={"xl"}
           >
-            <IconPhotoEdit style={{ width: "70%", height: "70%" }} stroke={1.5} />
+            <IconPhotoEdit
+              style={{ width: "70%", height: "70%" }}
+              stroke={1.5}
+            />
           </ActionIcon>
         </Flex>
 
@@ -372,7 +356,10 @@ export const MyProfile = () => {
               disabled={!isEditMode}
             />
           </Input.Wrapper>
-          <Input.Wrapper label="Branches" description="Enter comma separated values" >
+          <Input.Wrapper
+            label="Branches"
+            description="Enter comma separated values"
+          >
             <Input
               name="branches"
               value={profileData.branches}
@@ -381,6 +368,35 @@ export const MyProfile = () => {
             />
           </Input.Wrapper>
         </SimpleGrid>
+
+        {isEditMode && (
+          <Group justify="end">
+            <Button
+              mt={10}
+              color="green"
+              size="xs"
+              leftSection={<IconSquareRoundedCheck size={14} />}
+              onClick={toggleEditMode}
+            >
+              Save
+            </Button>
+          </Group>
+        )}
+
+        {isEditMode == false && (
+          <Group justify="end">
+            <Button
+              mt={10}
+              variant="filled"
+              color="blue"
+              size="xs"
+              leftSection={<IconEdit size={14} />}
+              onClick={toggleEditMode}
+            >
+              Edit
+            </Button>
+          </Group>
+        )}
       </Card>
     </>
   );
