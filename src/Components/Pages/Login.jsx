@@ -35,7 +35,7 @@ export const Login = () => {
         localStorage.setItem('full_name', full_name);
         localStorage.setItem('is_profile_created', is_profile_created);
 
-        navigate("dashboard/newjob");
+        navigate("dashboard/home");
       }
     } catch (error) {
       // console.error('Error logging in:', error);

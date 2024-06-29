@@ -7,6 +7,7 @@ import {
   TextInput,
   Button,
   Group,
+  Box,
   Flex,
 } from "@mantine/core";
 import {
@@ -65,6 +66,10 @@ export const Settings = () => {
     }
   };
 
+  const handleExternalLinkClick = (url) => {
+    window.open(url, "_blank");
+  };
+
   return (
     <>
       <Title order={3}>Settings</Title>
@@ -84,7 +89,7 @@ export const Settings = () => {
           </Flex>
         </Card>
 
-        <Card className="hoverclassscale" radius="md" withBorder>
+        <Card onClick={() => handleExternalLinkClick("https://shareinfo.imiot.co.in/")} className="hoverclassscale" radius="md" withBorder>
           <Flex align="center" justify="space-between">
             <Group>
               <IconArticle size={18} />
@@ -94,7 +99,7 @@ export const Settings = () => {
           </Flex>
         </Card>
 
-        <Card className="hoverclassscale" radius="md" withBorder>
+        <Card onClick={() => handleExternalLinkClick("https://shareinfo.imiot.co.in/")} className="hoverclassscale" radius="md" withBorder>
           <Flex align="center" justify="space-between">
             <Group>
               <IconShieldCheck size={18} />
@@ -108,26 +113,34 @@ export const Settings = () => {
       <Modal
         opened={modalOpened}
         onClose={() => setModalOpened(false)}
-        title="Reset Password"
+        withCloseButton={false}
+        centered
+        radius={"lg"}
       >
-        <TextInput
-          label="Current Password"
-          placeholder="Enter current password"
-          value={currentPassword}
-          onChange={(event) => setCurrentPassword(event.currentTarget.value)}
-          type="password"
-        />
-        <TextInput
-          label="New Password"
-          placeholder="Enter new password"
-          value={newPassword}
-          onChange={(event) => setNewPassword(event.currentTarget.value)}
-          type="password"
-          mt="md"
-        />
-        <Group position="right" mt="md">
-          <Button onClick={handleSubmit}>Submit</Button>
-        </Group>
+        <Box p={30} >
+
+          <Title order={5} mb={20}>
+            Reset Password
+          </Title>
+          <TextInput
+            radius={"lg"}
+            label="Current Password"
+            placeholder="Enter current password"
+            value={currentPassword}
+            onChange={(event) => setCurrentPassword(event.currentTarget.value)}
+            type="password"
+          />
+          <TextInput
+            radius={"lg"}
+            label="New Password"
+            placeholder="Enter new password"
+            value={newPassword}
+            onChange={(event) => setNewPassword(event.currentTarget.value)}
+            type="password"
+            mt="md"
+          />
+          <Button radius={"lg"} mt={"md"} fullWidth onClick={handleSubmit}>Submit</Button>
+        </Box>
       </Modal>
     </>
   );
