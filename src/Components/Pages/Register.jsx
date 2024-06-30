@@ -153,11 +153,12 @@ const handleRegister = async () => {
 
             {ThreeclickConstrain <= 3 ? (
               <>
-                <Text ta={"center"} fw={500} size="xs">
+
+                <Text fw={500} size="sm" ta={"center"}>
                   Didn't get the code?{" "}
                   <Anchor
                     ta={"center"}
-                    size="xs"
+                    size="sm"
                     fw={500}
                     onClick={() => {
                       if (timerresend === 0) {
@@ -165,6 +166,7 @@ const handleRegister = async () => {
                         setTimer(180);
                         setResendActive(false);
                         ClickConstrain();
+                        handleVerifyOtp()
                       }
                     }}
                     style={{
@@ -174,6 +176,9 @@ const handleRegister = async () => {
                   >
                     resend
                   </Anchor>
+
+                  <Text mt={5} ta={"center"} c={"dimmed"} fw={500} size="xs" > Please check your spam or junk folder if you haven't received the OTP in your inbox.</Text>
+
                   {resendActive == false && (
                     <>
                       {" ("}

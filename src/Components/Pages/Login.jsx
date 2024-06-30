@@ -16,7 +16,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useDisclosure } from "@mantine/hooks";
 import { Register } from "./Register";
-import axiosInstance from "../../Helpers/axios"; 
+import axiosInstance from "../../Helpers/axios";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
@@ -27,9 +27,9 @@ export const Login = () => {
   const HandleLogin = async (values) => {
     try {
       const response = await axiosInstance.post('/login/', values);
-      if (response.status === 200 ) {
+      if (response.status === 200) {
         const { access_token, refresh_token, is_profile_created, full_name } = response.data;
-        
+
         localStorage.setItem('access_token', access_token);
         localStorage.setItem('refresh_token', refresh_token);
         localStorage.setItem('full_name', full_name);
@@ -42,8 +42,12 @@ export const Login = () => {
       alert('Error logging in:', error);
     }
   };
-  
-  
+
+  const mailtofaceissue = () => {
+    const mailtoLink = 'mailto:accountsupport@shareinfo.io?subject=%23Urgent%2C%20Sign-up%20Error%3B%20ShareInfo%20for%20Recruiter&body=Hey%20Support%20Team%2C%0A%0A%7BEstablish%20Your%20Issue%20Here%7D';
+    window.open(mailtoLink, '_blank');
+  };
+
 
   return (
     <>
@@ -117,17 +121,26 @@ export const Login = () => {
                       />
 
                       <Button type="submit" mt={10} fullWidth radius="lg" disabled={isSubmitting}>
-                        Login
+                        Log In
                       </Button>
                     </Form>
                   )}
                 </Formik>
               </Box>
 
-              <Text c={"dimmed"} size="sm">
-                Don't have an account?{" "}
-                <Anchor onClick={open}>Sign up</Anchor>
-              </Text>
+              <Flex gap={10} direction={"column"} >
+
+
+                <Text c={"dimmed"} size="sm">
+                  Don't have an account?{" "}
+                  <Anchor onClick={open}>Sign up</Anchor>
+                </Text>
+
+                <Text c={"dimmed"} size="sm">
+                  Facing issue while Log In?{" "}
+                  <Anchor onClick={mailtofaceissue} > Contact us</Anchor>
+                </Text>
+              </Flex>
 
             </Flex>
           </Center>
