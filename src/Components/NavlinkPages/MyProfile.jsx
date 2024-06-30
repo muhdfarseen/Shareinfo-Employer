@@ -175,8 +175,21 @@ export const MyProfile = () => {
 
   return (
     <>
-      <Group justify="space-between">
+      <Group align="center" justify="space-between">
         <Title order={3}>My Profile</Title>
+        {!isEditMode && (
+           
+              <Button
+                variant="filled"
+                color="blue"
+                size="xs"
+                leftSection={<IconEdit size={14} />}
+                onClick={toggleEditMode}
+              >
+                Edit
+              </Button>
+           
+          )}
       </Group>
 
       {!isProfileCreated && (
@@ -380,21 +393,7 @@ export const MyProfile = () => {
 
           )}
 
-          {!isEditMode && (
-            <Flex align={"end"} justify={"end"} >
-              <Button
-                fullWidth
-                mt={10}
-                variant="filled"
-                color="blue"
-                size="sm"
-                leftSection={<IconEdit size={14} />}
-                onClick={toggleEditMode}
-              >
-                Edit
-              </Button>
-            </Flex>
-          )}
+         
         </SimpleGrid>
 
 
