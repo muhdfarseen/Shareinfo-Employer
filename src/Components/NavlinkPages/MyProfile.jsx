@@ -40,6 +40,7 @@ export const MyProfile = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null); // State for selected file
   const fileInputRef = useRef(null);
+  const RecruiterEmail = localStorage.getItem("email");
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -224,8 +225,8 @@ export const MyProfile = () => {
           </Input.Wrapper>
           <Input.Wrapper label="Recruiter Mail ID">
             <Input
-              name="company_mail"
-              value={profileData.company_mail}
+              name="recruiter_mail"
+              value={RecruiterEmail}
               disabled
             />
           </Input.Wrapper>

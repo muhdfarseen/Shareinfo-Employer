@@ -166,7 +166,7 @@ const handleRegister = async () => {
                         setTimer(180);
                         setResendActive(false);
                         ClickConstrain();
-                        handleVerifyOtp()
+                        handleSendOtp()
                       }
                     }}
                     style={{
@@ -177,7 +177,6 @@ const handleRegister = async () => {
                     resend
                   </Anchor>
 
-                  <Text mt={5} ta={"center"} c={"dimmed"} fw={500} size="xs" > Please check your spam or junk folder if you haven't received the OTP in your inbox.</Text>
 
                   {resendActive == false && (
                     <>
@@ -189,6 +188,8 @@ const handleRegister = async () => {
                       {")"}
                     </>
                   )}
+                  <Text mt={5} ta={"center"} c={"dimmed"} fw={500} size="xs" > Please check your spam or junk folder if you haven't received the OTP in your inbox.</Text>
+
                 </Text>
               </>
             ) : (

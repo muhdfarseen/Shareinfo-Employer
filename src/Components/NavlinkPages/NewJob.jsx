@@ -108,8 +108,7 @@ export const NewJob = () => {
       const accessToken = localStorage.getItem("access_token");
 
       try {
-        const response = await axiosInstance.get(
-          "https://dev.shareinfo.io/candidate/domain-list/",
+        const response = await axiosInstance.get(import.meta.env.VITE_BASEURLDOMAINLIST,        
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,

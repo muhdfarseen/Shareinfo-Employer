@@ -34,11 +34,11 @@ export const Login = () => {
         localStorage.setItem('refresh_token', refresh_token);
         localStorage.setItem('full_name', full_name);
         localStorage.setItem('is_profile_created', is_profile_created);
+        localStorage.setItem("email", values.email);
 
         navigate("dashboard/home");
       }
     } catch (error) {
-      // console.error('Error logging in:', error);
       alert('Error logging in:', error);
     }
   };
@@ -47,7 +47,6 @@ export const Login = () => {
     const mailtoLink = 'mailto:accountsupport@shareinfo.io?subject=%23Urgent%2C%20Sign-up%20Error%3B%20ShareInfo%20for%20Recruiter&body=Hey%20Support%20Team%2C%0A%0A%7BEstablish%20Your%20Issue%20Here%7D';
     window.open(mailtoLink, '_blank');
   };
-
 
   return (
     <>
@@ -91,8 +90,8 @@ export const Login = () => {
                     password: Yup.string()
                       .required('Required'),
                   })}
-                  onSubmit={(values, { setSubmitting }) => {
-                    HandleLogin(values);
+                  onSubmit={async (values, { setSubmitting }) => {
+                    await HandleLogin(values);
                     setSubmitting(false);
                   }}
                 >
@@ -121,7 +120,7 @@ export const Login = () => {
                       />
 
                       <Button type="submit" mt={10} fullWidth radius="lg" disabled={isSubmitting}>
-                        Log In
+                        {isSubmitting ? "Logging in..." : "Log In"}
                       </Button>
                     </Form>
                   )}
@@ -129,8 +128,6 @@ export const Login = () => {
               </Box>
 
               <Flex gap={10} direction={"column"} >
-
-
                 <Text c={"dimmed"} size="sm">
                   Don't have an account?{" "}
                   <Anchor onClick={open}>Sign up</Anchor>
@@ -141,7 +138,6 @@ export const Login = () => {
                   <Anchor onClick={mailtofaceissue} > Contact us</Anchor>
                 </Text>
               </Flex>
-
             </Flex>
           </Center>
         </Box>
