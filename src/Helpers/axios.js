@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 
-const csrfToken = Cookies.get('csrftoken');
+const csrfToken = Cookies.get("csrftoken");
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BASEURL,

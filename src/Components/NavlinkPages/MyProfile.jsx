@@ -179,18 +179,18 @@ export const MyProfile = () => {
       <Group align="center" justify="space-between">
         <Title order={3}>My Profile</Title>
         {!isEditMode && (
-           
-              <Button
-                variant="filled"
-                color="blue"
-                size="xs"
-                leftSection={<IconEdit size={14} />}
-                onClick={toggleEditMode}
-              >
-                Edit
-              </Button>
-           
-          )}
+
+          <Button
+            variant="filled"
+            color="blue"
+            size="xs"
+            leftSection={<IconEdit size={14} />}
+            onClick={toggleEditMode}
+          >
+            Edit
+          </Button>
+
+        )}
       </Group>
 
       {!isProfileCreated && (
@@ -371,6 +371,7 @@ export const MyProfile = () => {
 
           <Input.Wrapper label="Company Website" description="Should be in http/s format (for eg : https://imiot.co.in/ )" >
             <Input
+              type="url"
               name="company_website"
               value={profileData.company_website}
               onChange={handleChange}
@@ -394,7 +395,7 @@ export const MyProfile = () => {
 
           )}
 
-         
+
         </SimpleGrid>
 
 

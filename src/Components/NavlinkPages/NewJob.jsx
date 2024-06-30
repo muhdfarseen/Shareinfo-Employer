@@ -91,7 +91,7 @@ const jobSchema = Yup.object().shape({
   experience_type: Yup.string(),
   minimum_experience: Yup.number().positive().integer(),
   educational_qualification: Yup.string().required("Required"),
-  reference_website: Yup.string().required("Required"),
+  reference_website: Yup.string().url().required("Required"),
   no_of_vacancies: Yup.number().positive().integer().required("Required"),
   required_skills: Yup.string().required("Required"),
   location: Yup.string().required("Required"),
@@ -108,7 +108,7 @@ export const NewJob = () => {
       const accessToken = localStorage.getItem("access_token");
 
       try {
-        const response = await axiosInstance.get(import.meta.env.VITE_BASEURLDOMAINLIST,        
+        const response = await axiosInstance.get(import.meta.env.VITE_BASEURLDOMAINLIST,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -135,19 +135,28 @@ export const NewJob = () => {
           ? values.recruitment_end_date.toISOString().slice(0, 10)
           : values.recruitment_end_date;
 
-      const minQualifications = values.min_qualification
-        .split(",")
-        .reduce((acc, curr, index) => {
-          acc[index + 1] = curr.trim();
-          return acc;
-        }, {});
+      // const minQualifications = values.min_qualification
+      //   .split(",")
+      //   .reduce((acc, curr, index) => {
+      //     acc[index + 1] = curr.trim();
+      //     return acc;
+      //   }, {});
 
-      const perksBenefits = values.perks_benefits
-        .split(",")
-        .reduce((acc, curr, index) => {
-          acc[index + 1] = curr.trim();
-          return acc;
-        }, {});
+      const minQualifications = {
+        1: values.min_qualification.trim()
+      };
+
+
+      // const perksBenefits = values.perks_benefits
+      //   .split(",")
+      //   .reduce((acc, curr, index) => {
+      //     acc[index + 1] = curr.trim();
+      //     return acc;
+      //   }, {});
+
+      const perksBenefits = {
+        1: values.perks_benefits.trim()
+      };
 
       const requiredSkills = values.required_skills
         .split(",")
@@ -174,7 +183,7 @@ export const NewJob = () => {
         job_description: jobDescription,
         recruitment_end_date: formattedDate,
         minimum_salary: values.minimum_salary,
-        maximum_salary: 
+        maximum_salary:
           values.salary_type === "Onwards" || "Fixed" ? 0 : values.maximum_salary,
         minimum_experience:
           values.experience_type === "Fresher"
@@ -276,7 +285,7 @@ export const NewJob = () => {
                 value={values.min_qualification}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                placeholder="Enter comma separated values"
+                placeholder=""
                 error={touched.min_qualification && errors.min_qualification}
               />
 
