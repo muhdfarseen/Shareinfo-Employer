@@ -175,14 +175,12 @@ export const NewJob = () => {
         recruitment_end_date: formattedDate,
         minimum_salary: values.minimum_salary,
         maximum_salary: 
-          values.salary_type === "Fixed" ? 0 : values.maximum_salary,
+          values.salary_type === "Onwards" || "Fixed" ? 0 : values.maximum_salary,
         minimum_experience:
           values.experience_type === "Fresher"
             ? 0
             : values.minimum_experience,
       };
-
-      console.log(payload);
 
       const response = await axiosInstance.post("/create-job/", payload, {
         headers: {
@@ -196,7 +194,6 @@ export const NewJob = () => {
       }
     } catch (error) {
       alert("Failed to create job. Please try again.");
-      console.log(error)
     }
     setSubmitting(false);
   };
@@ -213,8 +210,8 @@ export const NewJob = () => {
           preference: "",
           perks_benefits: "",
           salary_type: "",
-          minimum_salary: "0",
-          maximum_salary: "0",
+          minimum_salary: "",
+          maximum_salary: "",
           job_category: "",
           experience_type: "",
           minimum_experience: "",
