@@ -85,8 +85,8 @@ const jobSchema = Yup.object().shape({
   preference: Yup.string(),
   perks_benefits: Yup.string().required("Required"),
   salary_type: Yup.string(),
-  minimum_salary: Yup.number().positive().integer(),
-  maximum_salary: Yup.number().positive().integer(),
+  minimum_salary: Yup.number().integer(),
+  maximum_salary: Yup.number().integer(),
   job_category: Yup.string(),
   experience_type: Yup.string(),
   minimum_experience: Yup.number().positive().integer(),
@@ -174,15 +174,15 @@ export const NewJob = () => {
         job_description: jobDescription,
         recruitment_end_date: formattedDate,
         minimum_salary: values.minimum_salary,
-        maximum_salary:
-          values.salary_type === "Fixed" ? null : values.maximum_salary,
+        maximum_salary: 
+          values.salary_type === "Fixed" ? 0 : values.maximum_salary,
         minimum_experience:
           values.experience_type === "Fresher"
-            ? null
+            ? 0
             : values.minimum_experience,
       };
 
-      // console.log(payload);
+      console.log(payload);
 
       const response = await axiosInstance.post("/create-job/", payload, {
         headers: {
@@ -196,6 +196,7 @@ export const NewJob = () => {
       }
     } catch (error) {
       alert("Failed to create job. Please try again.");
+      console.log(error)
     }
     setSubmitting(false);
   };
@@ -212,8 +213,8 @@ export const NewJob = () => {
           preference: "",
           perks_benefits: "",
           salary_type: "",
-          minimum_salary: "",
-          maximum_salary: "",
+          minimum_salary: "0",
+          maximum_salary: "0",
           job_category: "",
           experience_type: "",
           minimum_experience: "",
