@@ -345,7 +345,7 @@ export const MyProfile = () => {
           </Input.Wrapper>
           <Input.Wrapper
             label="Branches"
-            description="Should be in http/s format (for eg : https://imiot.co.in/ )"
+            description="Enter comma separated values"
           >
             <Input
               name="branches"
@@ -355,7 +355,7 @@ export const MyProfile = () => {
             />
           </Input.Wrapper>
 
-          <Input.Wrapper label="Company Website" description="Enter comma separated values">
+          <Input.Wrapper label="Company Website" description="Should be in http/s format (for eg : https://imiot.co.in/ )" >
             <Input
               name="company_website"
               value={profileData.company_website}
