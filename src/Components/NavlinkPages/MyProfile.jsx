@@ -38,6 +38,7 @@ export const MyProfile = () => {
   });
 
   const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null); // State for selected file
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -60,27 +61,16 @@ export const MyProfile = () => {
     fetchProfileData();
   }, []);
 
-  const handleLogoUpload = async (file) => {
-    try {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setProfileData((prevState) => ({
-          ...prevState,
-          company_logo: reader.result,
-        }));
-      };
-      reader.readAsDataURL(file);
-
-      const uploadedUrl = await uploadFileToAzure(file);
+  const handleLogoUpload = (file) => {
+    setSelectedFile(file);
+    const reader = new FileReader();
+    reader.onload = () => {
       setProfileData((prevState) => ({
         ...prevState,
-        company_logo: uploadedUrl,
+        company_logo: reader.result,
       }));
-
-      // Handle any additional logic after successful upload, if needed
-    } catch (error) {
-      // console.error("Failed to upload logo", error);
-    }
+    };
+    reader.readAsDataURL(file);
   };
 
   async function uploadFileToAzure(file) {
@@ -92,7 +82,7 @@ export const MyProfile = () => {
       const containerName = "logo";
       const containerClient =
         blobServiceClient.getContainerClient(containerName);
-      const blobName = `imiot/${file.name}`;
+      const blobName = `${profileData.company_name}/${file.name}`;
 
       const blockBlobClient = containerClient.getBlockBlobClient(blobName);
       await blockBlobClient.uploadBrowserData(file);
@@ -144,9 +134,12 @@ export const MyProfile = () => {
       branches: formattedBranches,
     };
 
-    // console.log("uploading new data :", updatedProfileData);
-
     try {
+      if (selectedFile) {
+        const uploadedUrl = await uploadFileToAzure(selectedFile);
+        updatedProfileData.company_logo = uploadedUrl;
+      }
+
       if (isProfileCreated) {
         await axiosInstance.put("/profile/", updatedProfileData, {
           headers: {
@@ -383,7 +376,7 @@ export const MyProfile = () => {
           </Group>
         )}
 
-        {isEditMode == false && (
+        {!isEditMode && (
           <Group justify="end">
             <Button
               mt={10}
