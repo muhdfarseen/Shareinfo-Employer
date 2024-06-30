@@ -507,7 +507,7 @@ export const NewJob = () => {
                   />
                 </Input.Wrapper>
                 <Input.Wrapper
-                  description="should be in http/s format (for eg : https://imiot.co.in/ )"
+                  description="Should be in http/s format (for eg : https://imiot.co.in/ )"
                   label="Reference Website"
                   error={touched.reference_website && errors.reference_website}
                 >

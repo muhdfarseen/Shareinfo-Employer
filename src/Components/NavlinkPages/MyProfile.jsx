@@ -283,22 +283,6 @@ export const MyProfile = () => {
               disabled={!isEditMode}
             />
           </Input.Wrapper>
-          <Input.Wrapper label="Company Website">
-            <Input
-              name="company_website"
-              value={profileData.company_website}
-              onChange={handleChange}
-              disabled={!isEditMode}
-            />
-          </Input.Wrapper>
-        </SimpleGrid>
-
-        <SimpleGrid
-          mt={"md"}
-          cols={{ base: 1, sm: 2, lg: 4 }}
-          spacing={{ base: 10, sm: "md" }}
-          verticalSpacing={{ base: "md", sm: "md" }}
-        >
           <Select
             label="Company Category"
             placeholder="Select category"
@@ -313,6 +297,16 @@ export const MyProfile = () => {
             onChange={(value) => handleSelectChange("company_category", value)}
             disabled={!isEditMode}
           />
+
+        </SimpleGrid>
+
+        <SimpleGrid
+          mt={"md"}
+          cols={{ base: 1, sm: 2, lg: 3 }}
+          spacing={{ base: 10, sm: "md" }}
+          verticalSpacing={{ base: "md", sm: "md" }}
+        >
+
           <Select
             label="Company Size"
             placeholder="Select size"
@@ -351,7 +345,7 @@ export const MyProfile = () => {
           </Input.Wrapper>
           <Input.Wrapper
             label="Branches"
-            description="Enter comma separated values"
+            description="Should be in http/s format (for eg : https://imiot.co.in/ )"
           >
             <Input
               name="branches"
@@ -360,36 +354,50 @@ export const MyProfile = () => {
               disabled={!isEditMode}
             />
           </Input.Wrapper>
+
+          <Input.Wrapper label="Company Website" description="Enter comma separated values">
+            <Input
+              name="company_website"
+              value={profileData.company_website}
+              onChange={handleChange}
+              disabled={!isEditMode}
+            />
+          </Input.Wrapper>
+          {isEditMode && (
+            <Flex align={"end"} justify={"end"} >
+
+              <Button
+                mt={10}
+                color="green"
+                size="sm"
+                fullWidth
+                leftSection={<IconSquareRoundedCheck size={14} />}
+                onClick={toggleEditMode}
+              >
+                Save
+              </Button>
+            </Flex>
+
+          )}
+
+          {!isEditMode && (
+            <Flex align={"end"} justify={"end"} >
+              <Button
+                fullWidth
+                mt={10}
+                variant="filled"
+                color="blue"
+                size="sm"
+                leftSection={<IconEdit size={14} />}
+                onClick={toggleEditMode}
+              >
+                Edit
+              </Button>
+            </Flex>
+          )}
         </SimpleGrid>
 
-        {isEditMode && (
-          <Group justify="end">
-            <Button
-              mt={10}
-              color="green"
-              size="xs"
-              leftSection={<IconSquareRoundedCheck size={14} />}
-              onClick={toggleEditMode}
-            >
-              Save
-            </Button>
-          </Group>
-        )}
 
-        {!isEditMode && (
-          <Group justify="end">
-            <Button
-              mt={10}
-              variant="filled"
-              color="blue"
-              size="xs"
-              leftSection={<IconEdit size={14} />}
-              onClick={toggleEditMode}
-            >
-              Edit
-            </Button>
-          </Group>
-        )}
       </Card>
     </>
   );
