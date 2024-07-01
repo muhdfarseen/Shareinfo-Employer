@@ -56,7 +56,7 @@ export const MyProfile = () => {
           },
         });
         setProfileData(response.data);
-        console.log(response.data);
+        // console.log(response.data);
       } catch (error) {
         toast.error("Failed to fetch profile data");
 

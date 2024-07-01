@@ -11,6 +11,8 @@ import {
   Anchor,
 } from "@mantine/core";
 import axiosInstance from "../../Helpers/axios";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export const Register = ({ closefun }) => {
   const [resetPassState, setResetPassState] = useState(1);
@@ -62,8 +64,15 @@ export const Register = ({ closefun }) => {
         if (response.status === 200) {
             setResetPassState(2);
             setTimer(180);
+            toast.success("OTP sent to your email");
+            toast.info("Please check your spam or junk folder if you haven't received the OTP in your inbox");
+
+            
+
         }
     } catch (error) {
+      toast.error("Error sending OTP");
+
         // console.error("Error sending OTP:", error);
     }
 };
@@ -73,9 +82,13 @@ const handleVerifyOtp = async () => {
         const response = await axiosInstance.post("/otp-verify/", { otp });
         if (response.status === 200) {
             setResetPassState(3);
+            toast.success("OTP verified successfully");
+
         }
     } catch (error) {
         // console.error("Error verifying OTP:", error);
+        toast.error("Error verifying OTP");
+
     }
 };
 
@@ -92,9 +105,18 @@ const handleRegister = async () => {
         });
 
         if (response.status === 200) {
-            closefun();
+          const { access_token, refresh_token, is_profile_created, full_name } = response.data;
+  
+          localStorage.setItem('access_token', access_token);
+          localStorage.setItem('refresh_token', refresh_token);
+          localStorage.setItem('full_name', full_name);
+          localStorage.setItem('is_profile_created', is_profile_created);
+          localStorage.setItem("email", values.email);
+  
+          navigate("dashboard/home");
         }
     } catch (error) {
+        toast.error("Error creating password");
         // console.error("Error creating password:", error);
     }
 };
@@ -188,7 +210,7 @@ const handleRegister = async () => {
                       {")"}
                     </>
                   )}
-                  <Text mt={5} ta={"center"} c={"dimmed"} fw={500} size="xs" > Please check your spam or junk folder if you haven't received the OTP in your inbox.</Text>
+                  {/* <Text mt={5} ta={"center"} c={"dimmed"} fw={500} size="xs" > Please check your spam or junk folder if you haven't received the OTP in your inbox.</Text> */}
 
                 </Text>
               </>
@@ -204,6 +226,8 @@ const handleRegister = async () => {
       case 3:
         return (
           <>
+                    <ToastContainer position="top-center" />
+
             <Flex gap={10} direction={"column"}>
               <Input.Wrapper size="xs" flex={1} label="Create Password">
                 <PasswordInput
