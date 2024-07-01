@@ -39,11 +39,9 @@ export const MyProfile = () => {
   });
 
   const [isEditMode, setIsEditMode] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null); // State for selected file
+  const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef(null);
   const RecruiterEmail = localStorage.getItem("email");
-
-  const [, forceUpdate] = useState();
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -187,6 +185,9 @@ export const MyProfile = () => {
     localStorage.getItem("is_profile_created")
   );
 
+  
+  
+
   return (
     <>
           <ToastContainer position="top-center" />
@@ -207,19 +208,6 @@ export const MyProfile = () => {
 
         )}
       </Group>
-
-      {!isProfileCreated && (
-        <Alert
-          radius={"md"}
-          mt={10}
-          variant="light"
-          color="red"
-          title="Complete Your Profile"
-        >
-          Please complete your profile to access all the features and benefits
-          of our platform.
-        </Alert>
-      )}
 
       <Card radius={"md"} mt={10}>
         <Title order={5}>Recruiter Details</Title>

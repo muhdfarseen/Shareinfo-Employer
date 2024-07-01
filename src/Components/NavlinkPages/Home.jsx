@@ -1,4 +1,4 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import { Card, Text, SimpleGrid, Flex, useMantineTheme } from "@mantine/core";
 import {
   IconUsers,
@@ -12,6 +12,8 @@ import {
 } from "@tabler/icons-react";
 import classes from "./Home.module.css";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const mockdata = [
   {
@@ -57,6 +59,10 @@ export const Home = () => {
     }
   };
 
+  
+
+  
+
   const items = mockdata.map((item, index) => (
     <Card
       w={150}
@@ -74,6 +80,8 @@ export const Home = () => {
 
   return (
     <div>
+      <ToastContainer position="top-center" />
+
       <Flex
         align={"center"}
         justify={"center"}

@@ -64,7 +64,7 @@ export const Register = ({ closefun }) => {
         if (response.status === 200) {
             setResetPassState(2);
             setTimer(180);
-            toast.success("OTP sent to your email");
+            toast.success("A verification code has been sent to your email address.");
             toast.info("Please check your spam or junk folder if you haven't received the OTP in your inbox");
 
             
