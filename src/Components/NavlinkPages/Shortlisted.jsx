@@ -1,6 +1,10 @@
+import React, { useEffect, useState } from 'react'
 import { Title, Card, Select, Text, Modal, Image, SimpleGrid, Button, Group, Box, FileInput, Badge, ActionIcon, Flex, Radio, Switch, Pill } from '@mantine/core';
 import { ApplicantProfile } from './ApplicantProfile';
 import { useDisclosure } from '@mantine/hooks';
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import axiosInstance from "../../Helpers/axios";
 
 
 const data = [
@@ -49,14 +53,43 @@ export const Shortlisted = () => {
 
     const [opened, { open, close }] = useDisclosure(false);
 
+    const [jobs, setJobs] = useState([]);
+    const [applicants, setApplicants] = useState([]);
+
+    useEffect(() => {
+        const fetchJobs = async () => {
+          try {
+            const response = await axiosInstance.get("/job-list/", {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+                },
+              });
+            setJobs(response.data);
+            // console.log(response.data);
+          } catch (error) {
+            toast.error("Error fetching jobs");
+          }
+        };
+    
+        fetchJobs();
+      }, []);
+
+
     return (
         <>
+                    <ToastContainer position="top-center" />
+
             <Flex align={"center"} justify={"space-between"} >
-                <Title order={3} >Shortlisted Candidates</Title>
+                <Title order={3} >All Applicants</Title>
                 <Select
                     size='xs'
                     placeholder="Select Job"
-                    data={['UI Designer', 'SDE 2', 'Java Developer', 'DevOps']}
+                    searchable
+                    data={jobs.map((item) => ({
+                        value: String(item.job_id), 
+                        label: item.job_title,
+                      }))}
+                    // onChange={(value) => fetchApplicantsForJob(value)}
                 />
             </Flex>
 

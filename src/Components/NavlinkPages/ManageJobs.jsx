@@ -37,9 +37,15 @@ export const ManageJobs = () => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axiosInstance.get("/job-list/");
+        const response = await axiosInstance.get("/job-list/", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        });
         setJobs(response.data);
+        // console.log(response.data);
       } catch (error) {
+        toast.error("Error fetching jobs");
         // console.error("Error fetching jobs:", error);
       }
     };

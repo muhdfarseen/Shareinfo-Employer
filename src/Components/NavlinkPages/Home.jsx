@@ -91,7 +91,7 @@ export const Home = () => {
         align={"center"}
         justify={"center"}
         w={"100%"}
-        h={"calc(100dvh - 120px)"}
+        mih={"calc(100dvh - 120px)"}
       >
         <SimpleGrid
           cols={{ base: 1, sm: 2, lg: 3 }}
