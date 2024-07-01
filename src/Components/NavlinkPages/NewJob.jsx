@@ -14,6 +14,8 @@ import { IconSquareRoundedCheck } from "@tabler/icons-react";
 import axiosInstance from "../../Helpers/axios";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const SALARY_TYPE = [
   { value: "Fixed", label: "Fixed" },
@@ -198,17 +200,19 @@ export const NewJob = () => {
       });
 
       if (response.status === 201 || response.status === 200) {
-        alert("Job posted successfully");
+        toast.success("Job posted successfully");
         window.location.reload();
       }
     } catch (error) {
-      alert("Failed to create job. Please try again.");
+      toast.error("Failed to create job. Please try again.");
     }
     setSubmitting(false);
   };
 
   return (
     <>
+      <ToastContainer position="top-center" />
+
       <Formik
         initialValues={{
           job_title: "",
@@ -297,7 +301,7 @@ export const NewJob = () => {
               >
                 <Select
                   data={domainList.map((domain) => ({
-                    value: String(domain.id), // Convert id to string explicitly
+                    value: String(domain.id), 
                     label: domain.domain_name,
                   }))}
                   searchable

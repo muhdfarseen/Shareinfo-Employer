@@ -21,7 +21,8 @@ import {
 } from "@tabler/icons-react";
 import { BlobServiceClient } from "@azure/storage-blob";
 import axiosInstance from "../../Helpers/axios";
-
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 export const MyProfile = () => {
   const [profileData, setProfileData] = useState({
     employer_name: "",
@@ -42,6 +43,8 @@ export const MyProfile = () => {
   const fileInputRef = useRef(null);
   const RecruiterEmail = localStorage.getItem("email");
 
+  const [, forceUpdate] = useState();
+
   useEffect(() => {
     const fetchProfileData = async () => {
       const accessToken = localStorage.getItem("access_token");
@@ -53,8 +56,10 @@ export const MyProfile = () => {
           },
         });
         setProfileData(response.data);
-        // console.log(response.data);
+        console.log(response.data);
       } catch (error) {
+        toast.error("Failed to fetch profile data");
+
         // console.error("Failed to fetch profile data", error);
       }
     };
@@ -89,11 +94,14 @@ export const MyProfile = () => {
       await blockBlobClient.uploadBrowserData(file);
 
       const uploadedUrl = blockBlobClient.url;
+
       // console.log(`Upload block blob ${file.name} successfully`);
 
       return uploadedUrl;
     } catch (error) {
       // console.error("Failed to upload file to Azure Blob Storage", error);
+      toast.error("Failed to upload file");
+
       throw error;
     }
   }
@@ -155,11 +163,16 @@ export const MyProfile = () => {
         });
         localStorage.setItem("is_profile_created", true);
       }
-      // console.log("Profile updated successfully");
-      window.location.reload();
+      
+      if(!isProfileCreated){
+        window.location.reload();
+      }
+      toast.success("Profile updated successfully");
+
     } catch (error) {
-      // console.error("Failed to update profile", error);
-      alert("Failed to update profile");
+      console.error("Failed to update profile", error);
+      toast.error("Failed to update profile");
+
       return;
     }
 
@@ -176,6 +189,8 @@ export const MyProfile = () => {
 
   return (
     <>
+          <ToastContainer position="top-center" />
+
       <Group align="center" justify="space-between">
         <Title order={3}>My Profile</Title>
         {!isEditMode && (
@@ -325,7 +340,7 @@ export const MyProfile = () => {
             label="Company Size"
             placeholder="Select size"
             name="company_size"
-            data={["1-50", "50-100", "100-500", "500-2000", "20001+"]}
+            data={["1-50", "50-100", "100-500", "500-2000", "2000+"]}
             value={profileData.company_size}
             onChange={(value) => handleSelectChange("company_size", value)}
             disabled={!isEditMode}

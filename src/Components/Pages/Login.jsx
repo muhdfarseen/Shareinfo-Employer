@@ -19,6 +19,9 @@ import { Register } from "./Register";
 import axiosInstance from "../../Helpers/axios";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -39,7 +42,8 @@ export const Login = () => {
         navigate("dashboard/home");
       }
     } catch (error) {
-      alert('Error logging in:', error);
+      const errorMessage = error.response.data.message;
+      toast.error(`Error logging in: ${errorMessage}`);
     }
   };
 
@@ -50,6 +54,8 @@ export const Login = () => {
 
   return (
     <>
+          <ToastContainer />
+
       <Flex>
         <Image
           flex={1}

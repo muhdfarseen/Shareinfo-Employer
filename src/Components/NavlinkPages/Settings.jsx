@@ -17,6 +17,8 @@ import {
   IconShieldCheck,
 } from "@tabler/icons-react";
 import axiosInstance from "../../Helpers/axios";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export const Settings = () => {
   const [modalOpened, setModalOpened] = useState(false);
@@ -48,22 +50,26 @@ export const Settings = () => {
           }
         );
         if (updateResponse.status === 200) {
-          alert("Password updated successfully");
+          toast.success("Password updated successfully");
+          setModalOpened(false)
+
         } else {
-          alert("Failed to update password");
+          toast.error("Failed to update password");
+
         }
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        alert("Current password does not match");
+        toast.error("Current password does not match");
+
       } else if (error.response && error.response.status === 406) {
-        alert("Invalid input data");
+        toast.error("Invalid input data");
+
       } else {
-        alert("An error occurred");
+        toast.error("An error occurred");
+
       }
-    } finally {
-      setModalOpened(false);
-    }
+    } 
   };
 
   const handleExternalLinkClick = (url) => {
@@ -72,6 +78,8 @@ export const Settings = () => {
 
   return (
     <>
+      <ToastContainer position="top-center" />
+
       <Title order={3}>Settings</Title>
       <SimpleGrid mt={10} cols={1} spacing="md" verticalSpacing="md">
         <Card
