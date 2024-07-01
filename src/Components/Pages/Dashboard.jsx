@@ -16,8 +16,8 @@ const data = [
   { id: 0, icon: IconHome, label: "Home", path: "home" },
   { id: 1, icon: IconHexagonPlus, label: "Post New Job", path: "newjob" },
   { id: 2, icon: IconBriefcase, label: "Manage Jobs", path: "managejob" },
-  // { id: 3, icon: IconAddressBook, label: "All Applicants", path: "allaplicants" },
-  // { id: 4, icon: IconCheckbox, label: "Shortlisted", path: "shortlisted" },
+  { id: 3, icon: IconAddressBook, label: "All Applicants", path: "allaplicants" },
+  { id: 4, icon: IconCheckbox, label: "Shortlisted", path: "shortlisted" },
   { id: 5, icon: IconUserCircle, label: "My Profile", path: "myprofile" },
   { id: 6, icon: IconSettings, label: "Settings", path: "settings" },
 ];
@@ -37,7 +37,7 @@ export const Dashboard = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const path = location.pathname.replace('/dashboard/', ''); // Extract path after '/dashboard/'
+    const path = location.pathname.replace('/dashboard/', '');
     const index = data.findIndex(item => item.path === path);
     if (index !== -1) {
       setActive(index);

@@ -65,11 +65,10 @@ export const ManageJobs = () => {
       <Table.Td>{job.working_mode}</Table.Td>
       <Table.Td>{job.preference}</Table.Td>
       <Table.Td>{job.location}</Table.Td>
-
       <Table.Td>{job.applied_count}</Table.Td>
       
 
-      {/* <Table.Td>
+      <Table.Td>
         <Group gap={10}>
           <ActionIcon
             variant="light"
@@ -88,7 +87,7 @@ export const ManageJobs = () => {
             <IconTrash style={{ width: "70%", height: "70%" }} stroke={1.5} />
           </ActionIcon>
         </Group>
-      </Table.Td> */}
+      </Table.Td>
 
 
     </Table.Tr>
@@ -107,7 +106,7 @@ export const ManageJobs = () => {
               <Table.Th>Preference</Table.Th>
               <Table.Th>Location</Table.Th>
               <Table.Th>Applications</Table.Th>
-              {/* <Table.Th>Quick Action</Table.Th> */}
+              <Table.Th>Quick Action</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>{rows}</Table.Tbody>
