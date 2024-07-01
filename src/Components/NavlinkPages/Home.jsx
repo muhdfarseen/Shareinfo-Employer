@@ -59,9 +59,14 @@ export const Home = () => {
     }
   };
 
-  
+  useEffect(() => {
+    const log = Number(localStorage.getItem("log")); 
+    if (log === 1) {
+      toast.success("Welcome back! You have successfully logged in");
+      localStorage.setItem("log", log + 1); 
+    }
+  }, []);
 
-  
 
   const items = mockdata.map((item, index) => (
     <Card

@@ -38,6 +38,8 @@ export const Login = () => {
         localStorage.setItem('full_name', full_name);
         localStorage.setItem('is_profile_created', is_profile_created);
         localStorage.setItem("email", values.email);
+        localStorage.setItem("log", 1);
+
 
         navigate("dashboard/home");
       }
