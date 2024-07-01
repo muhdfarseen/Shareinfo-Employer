@@ -293,12 +293,14 @@ export const NewJob = () => {
                 mt={10}
                 label="Domain"
                 error={touched.domain && errors.domain}
+                
               >
                 <Select
                   data={domainList.map((domain) => ({
                     value: String(domain.id), // Convert id to string explicitly
                     label: domain.domain_name,
                   }))}
+                  searchable
                   value={values.domain}
                   onChange={(value) => setFieldValue("domain", value)}
                   placeholder="Select Domain"

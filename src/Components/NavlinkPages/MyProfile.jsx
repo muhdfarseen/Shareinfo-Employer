@@ -371,7 +371,6 @@ export const MyProfile = () => {
 
           <Input.Wrapper label="Company Website" description="Should be in http/s format (for eg : https://imiot.co.in/ )" >
             <Input
-              type="url"
               name="company_website"
               value={profileData.company_website}
               onChange={handleChange}
