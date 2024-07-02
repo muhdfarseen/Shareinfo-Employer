@@ -23,6 +23,8 @@ import { BlobServiceClient } from "@azure/storage-blob";
 import axiosInstance from "../../Helpers/axios";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+
+
 export const MyProfile = () => {
   const [profileData, setProfileData] = useState({
     employer_name: "",
@@ -43,28 +45,6 @@ export const MyProfile = () => {
   const fileInputRef = useRef(null);
   const RecruiterEmail = localStorage.getItem("email");
 
-  useEffect(() => {
-    const fetchProfileData = async () => {
-      const accessToken = localStorage.getItem("access_token");
-
-      try {
-        const response = await axiosInstance.get("/profile/", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        setProfileData(response.data);
-        // console.log(response.data);
-      } catch (error) {
-        toast.error("Failed to fetch profile data");
-
-        // console.error("Failed to fetch profile data", error);
-      }
-    };
-
-    fetchProfileData();
-  }, []);
-
   const handleLogoUpload = (file) => {
     setSelectedFile(file);
     const reader = new FileReader();
@@ -77,6 +57,7 @@ export const MyProfile = () => {
     reader.readAsDataURL(file);
   };
 
+  
   async function uploadFileToAzure(file) {
     try {
       const blobServiceClient = new BlobServiceClient(
@@ -121,12 +102,10 @@ export const MyProfile = () => {
     }
   };
 
-  const handleSaveProfile = async () => {
-    const accessToken = localStorage.getItem("access_token");
-    const isProfileCreated = JSON.parse(
-      localStorage.getItem("is_profile_created")
-    );
+  const accessToken = localStorage.getItem("access_token");
+  const isProfileCreated = JSON.parse(localStorage.getItem("is_profile_created") );
 
+  const handleSaveProfile = async () => {
     const formattedBranches = (
       typeof profileData.branches === "string" ? profileData.branches : ""
     )
@@ -135,18 +114,19 @@ export const MyProfile = () => {
         acc[index + 1] = branch.trim();
         return acc;
       }, {});
-
+  
     const updatedProfileData = {
       ...profileData,
       branches: formattedBranches,
+      minimum_payroll: parseInt(profileData.minimum_payroll, 10),
     };
-
+  
     try {
       if (selectedFile) {
         const uploadedUrl = await uploadFileToAzure(selectedFile);
         updatedProfileData.company_logo = uploadedUrl;
       }
-
+  
       if (isProfileCreated) {
         await axiosInstance.put("/profile/", updatedProfileData, {
           headers: {
@@ -154,26 +134,27 @@ export const MyProfile = () => {
           },
         });
       } else {
-        await axiosInstance.post("/create-profile/", updatedProfileData, {
+        const response = await axiosInstance.post("/create-profile/", updatedProfileData, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        localStorage.setItem("is_profile_created", true);
+        if (response.status === 200) {
+          localStorage.setItem("is_profile_created", true);
+        }
       }
-      
-      if(!isProfileCreated){
+  
+      if (!isProfileCreated) {
         window.location.reload();
       }
       toast.success("Profile updated successfully");
-
     } catch (error) {
       console.error("Failed to update profile", error);
-      toast.error("Failed to update profile");
-
+      toast.error(`Failed to update profile: ${error.response?.data?.message || error.message}`);
+  
       return;
     }
-
+  
     setIsEditMode(false);
   };
 
@@ -181,9 +162,34 @@ export const MyProfile = () => {
     fileInputRef.current.click();
   };
 
-  const isProfileCreated = JSON.parse(
-    localStorage.getItem("is_profile_created")
-  );
+  
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      const accessToken = localStorage.getItem("access_token");
+  
+      try {
+        const response = await axiosInstance.get("/profile/", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        setProfileData(response.data);
+      } catch (error) {
+        toast.error("Failed to fetch profile data");
+      }
+    };
+  
+    if (isProfileCreated) {
+      fetchProfileData();
+    } else {
+      toast.info(
+        "Please complete your profile to access all the features and benefits of our platform."
+      );
+    }
+  }, [isProfileCreated]);
+  
+  
 
   
   
@@ -405,3 +411,4 @@ export const MyProfile = () => {
     </>
   );
 };
+

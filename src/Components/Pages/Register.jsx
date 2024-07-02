@@ -13,6 +13,7 @@ import {
 import axiosInstance from "../../Helpers/axios";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router-dom";
 
 export const Register = ({ closefun }) => {
   const [resetPassState, setResetPassState] = useState(1);
@@ -26,6 +27,8 @@ export const Register = ({ closefun }) => {
 
   const [resendActive, setResendActive] = useState(false);
   const [timerresend, setTimerresend] = useState(0);
+
+  const navigate = useNavigate();
 
   const ClickConstrain = () => {
     setThreeclickConstrain((prevState) => prevState + 1);
@@ -94,7 +97,7 @@ const handleVerifyOtp = async () => {
 
 const handleRegister = async () => {
     if (password !== confirmPassword) {
-        alert("Passwords do not match");
+        toast.error("Passwords do not match");
         return;
     }
 
@@ -104,20 +107,22 @@ const handleRegister = async () => {
             user_type: userType,
         });
 
+        console.log("out",password)
+
         if (response.status === 200) {
           const { access_token, refresh_token, is_profile_created, full_name } = response.data;
   
           localStorage.setItem('access_token', access_token);
           localStorage.setItem('refresh_token', refresh_token);
           localStorage.setItem('full_name', full_name);
-          localStorage.setItem('is_profile_created', is_profile_created);
-          localStorage.setItem("email", values.email);
+          localStorage.setItem('is_profile_created', "false");
+          localStorage.setItem("email", email);
   
           navigate("dashboard/home");
         }
     } catch (error) {
         toast.error("Error creating password");
-        // console.error("Error creating password:", error);
+        console.error("Error creating password:", error);
     }
 };
 
@@ -226,7 +231,6 @@ const handleRegister = async () => {
       case 3:
         return (
           <>
-                    <ToastContainer position="top-center" />
 
             <Flex gap={10} direction={"column"}>
               <Input.Wrapper size="xs" flex={1} label="Create Password">

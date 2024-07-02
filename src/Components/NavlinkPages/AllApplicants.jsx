@@ -32,6 +32,8 @@ export const AllApplicants = () => {
     const [selectedJobId, setselectedJobId] = useState("");
     const [selectedJobName, setselectedJobName] = useState("");
 
+    const [applicationId, setApplicationId] = useState("");
+
     useEffect(() => {
         const fetchJobs = async () => {
           try {
@@ -65,6 +67,8 @@ export const AllApplicants = () => {
           console.error('Error fetching applicants for job:', error);
         }
       };
+
+      console.log(applicationId);
 
     return (
         <>
@@ -120,7 +124,10 @@ export const AllApplicants = () => {
                     {applicants.map((applicant, index) => (
                       <Card
                         key={index}
-                        onClick={() => open()}
+                        onClick={() => {
+                            setApplicationId(applicant.application_id.replace("#", ""));
+                            open();
+                        }}
                         className="hoverclassscale"
                         radius="md"
                       
@@ -169,7 +176,7 @@ export const AllApplicants = () => {
                   title="Authentication"
                   centered
                 >
-                  <ApplicantProfile />
+                  <ApplicantProfile applicationId={applicationId} />
                 </Modal>
               </>
             )}
