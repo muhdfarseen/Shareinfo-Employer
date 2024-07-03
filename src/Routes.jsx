@@ -26,7 +26,7 @@ const NewJob = Loadable(lazy(() => import("./Components/NavlinkPages/NewJob").th
 const ManageJobs = Loadable(lazy(() => import("./Components/NavlinkPages/ManageJobs").then(module => ({ default: module.ManageJobs }))));
 const MyProfile = Loadable(lazy(() => import("./Components/NavlinkPages/MyProfile").then(module => ({ default: module.MyProfile }))));
 const AllApplicants = Loadable(lazy(() => import("./Components/NavlinkPages/AllApplicants").then(module => ({ default: module.AllApplicants }))));
-const Shortlisted = Loadable(lazy(() => import("./Components/NavlinkPages/Shortlisted").then(module => ({ default: module.Shortlisted }))));
+const ApplicantsByStatus = Loadable(lazy(() => import("./Components/NavlinkPages/ApplicantsByStatus").then(module => ({ default: module.ApplicantsByStatus }))));
 const Settings = Loadable(lazy(() => import("./Components/NavlinkPages/Settings").then(module => ({ default: module.Settings }))));
 
 //lazy loading components end -------------------
@@ -51,7 +51,7 @@ export const routes = [
       { path: "managejob", element: <ProfileCompletionCheck> <ManageJobs /> </ProfileCompletionCheck>  },
       { path: "myprofile", element: <MyProfile /> },
       { path: "allaplicants", element: <ProfileCompletionCheck> <AllApplicants /> </ProfileCompletionCheck>  },
-      { path: "shortlisted", element: <ProfileCompletionCheck> <Shortlisted/> </ProfileCompletionCheck>  },
+      { path: "applicants-by-Status", element: <ProfileCompletionCheck> <ApplicantsByStatus/> </ProfileCompletionCheck>  },
       { path: "settings", element: <ProfileCompletionCheck> <Settings/> </ProfileCompletionCheck>  }
     ],
   },

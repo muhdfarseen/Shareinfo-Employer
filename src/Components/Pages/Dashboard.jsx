@@ -17,7 +17,7 @@ const data = [
   { id: 1, icon: IconHexagonPlus, label: "Post New Job", path: "newjob" },
   { id: 2, icon: IconBriefcase, label: "Manage Jobs", path: "managejob" },
   { id: 3, icon: IconAddressBook, label: "All Applicants", path: "allaplicants" },
-  { id: 4, icon: IconCheckbox, label: "Shortlisted", path: "shortlisted" },
+  { id: 4, icon: IconCheckbox, label: "Applicants by Status", path: "applicants-by-Status" },
   { id: 5, icon: IconUserCircle, label: "My Profile", path: "myprofile" },
   { id: 6, icon: IconSettings, label: "Settings", path: "settings" },
 ];

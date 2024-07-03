@@ -173,10 +173,13 @@ export const AllApplicants = () => {
                   opened={opened}
                   size="100%"
                   onClose={close}
-                  title="Authentication"
                   centered
+                  withCloseButton={false}
                 >
-                  <ApplicantProfile applicationId={applicationId} />
+                  <ApplicantProfile
+                    applicationId={applicationId}
+                    handleClose={close}
+                  />
                 </Modal>
               </>
             )}
