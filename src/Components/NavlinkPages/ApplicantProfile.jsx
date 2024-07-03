@@ -159,7 +159,7 @@ export const ApplicantProfile = ({ applicationId, handleClose }) => {
           withBorder
         >
           <Flex gap={20}>
-            <Avatar size={"xl"} src={"/public/profilePlaceholder.jpg"} />
+            <Avatar size={"xl"} src={"/profilePlaceholder.jpg"} />
             <Flex
               justify={"flex-end"}
               align={"flex-start"}

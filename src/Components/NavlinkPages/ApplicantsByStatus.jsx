@@ -164,7 +164,7 @@ export const ApplicantsByStatus = () => {
                       `https://shareinfo.blob.core.windows.net/candidate/${encryptedUserName(
                         applicant.name
                       )}${applicant.profile_photo}${azureBlobUrl}` ||
-                      "/public/placeholder.png"
+                      "/profilePlaceholder.jpg"
                     }
                     alt={applicant.name}
                   />
