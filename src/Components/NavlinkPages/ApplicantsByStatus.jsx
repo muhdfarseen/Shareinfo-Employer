@@ -85,6 +85,9 @@ export const ApplicantsByStatus = () => {
         }
       );
       setApplicants(response.data);
+      if (response.data.length === 0) {
+        toast.error("No applicants found");
+      }
     } catch (error) {
       toast.error("Error fetching applicants");
     }
