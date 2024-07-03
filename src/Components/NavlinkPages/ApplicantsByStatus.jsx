@@ -9,13 +9,7 @@ import {
   SimpleGrid,
   Button,
   Group,
-  Box,
-  FileInput,
-  Badge,
-  ActionIcon,
   Flex,
-  Radio,
-  Switch,
   Pill,
 } from "@mantine/core";
 import { ApplicantProfile } from "./ApplicantProfile";
@@ -23,52 +17,45 @@ import { useDisclosure } from "@mantine/hooks";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axiosInstance from "../../Helpers/axios";
+import CryptoJS from "crypto-js";
+import { Buffer } from "buffer";
 
-const data = [
-  {
-    name: "John Doe",
-    location: "New York, USA",
-    image: "https://via.placeholder.com/150",
-    skills: "JavaScript, React, Node.js",
-  },
+const secretKey32 = import.meta.env.VITE_SECRET_KEY32;
+const secretKey16 = import.meta.env.VITE_SECRET_KEY16;
+const azureBlobUrl = import.meta.env.VITE_BLOBURLRESUME;
 
-  {
-    name: "Michael Wilson",
-    location: "Berlin, Germany",
-    image: "https://via.placeholder.com/150",
-    skills: "C++, Unreal Engine, Game Development",
-  },
-  {
-    name: "Sarah Johnson",
-    location: "San Francisco, USA",
-    image: "https://via.placeholder.com/150",
-    skills: "Ruby on Rails, PostgreSQL, Backend Development",
-  },
-  {
-    name: "David Lee",
-    location: "Seoul, South Korea",
-    image: "https://via.placeholder.com/150",
-    skills: "Kotlin, Android Development, Mobile Apps",
-  },
-  {
-    name: "Laura Kim",
-    location: "Tokyo, Japan",
-    image: "https://via.placeholder.com/150",
-    skills: "Swift, iOS Development, UI/UX Design",
-  },
-  {
-    name: "James White",
-    location: "Paris, France",
-    image: "https://via.placeholder.com/150",
-    skills: "PHP, Laravel, Full Stack Development",
-  },
-];
+function encryptedUserName(email) {
+  if (!email) return null;
+  const key = CryptoJS.enc.Utf8.parse(secretKey32);
+  const iv = CryptoJS.enc.Utf8.parse(secretKey16);
+  const encrypted = CryptoJS.AES.encrypt(email, key, {
+    iv: iv,
+    mode: CryptoJS.mode.CBC,
+  });
+  const ivBytes = Buffer.from(iv.toString(CryptoJS.enc.Utf8), "utf-8");
+  const encryptedBytes = Buffer.from(
+    encrypted.ciphertext.toString(CryptoJS.enc.Hex),
+    "hex"
+  );
+  const combinedBytes = Buffer.concat([ivBytes, encryptedBytes]);
+  let base64String = combinedBytes.toString("base64");
+
+  base64String = base64String
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+
+  return base64String;
+}
 
 export const ApplicantsByStatus = () => {
   const [opened, { open, close }] = useDisclosure(false);
 
   const [jobs, setJobs] = useState([]);
   const [applicants, setApplicants] = useState([]);
+  const [selectedJobId, setSelectedJobId] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("Pending");
+  const [applicationId, setApplicationId] = useState("");
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -79,7 +66,6 @@ export const ApplicantsByStatus = () => {
           },
         });
         setJobs(response.data);
-        // console.log(response.data);
       } catch (error) {
         toast.error("Error fetching jobs");
       }
@@ -88,59 +74,151 @@ export const ApplicantsByStatus = () => {
     fetchJobs();
   }, []);
 
+  const fetchApplicantsByStatus = async () => {
+    try {
+      const response = await axiosInstance.get(
+        `/specific-job/by-status/${selectedJobId}/${selectedStatus}/`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+      setApplicants(response.data);
+    } catch (error) {
+      toast.error("Error fetching applicants");
+    }
+  };
+
   return (
     <>
       <ToastContainer position="top-center" />
 
       <Flex mb={10} align={"center"} justify={"space-between"}>
         <Title order={3}>Applicants by Status</Title>
-        <Select
-          size="xs"
-          placeholder="Select Job"
-          searchable
-          data={jobs.map((item) => ({
-            value: String(item.job_id),
-            label: item.job_title,
-          }))}
-        />
+        <Group align="end" gap={10}>
+          <Select
+            label="Select Job"
+            placeholder="Select Job"
+            allowDeselect={false}
+            searchable
+            data={jobs.map((item) => ({
+              value: String(item.job_id),
+              label: item.job_title,
+            }))}
+            onChange={(value) => setSelectedJobId(value)}
+          />
+          <Select
+            label="Candidate Status"
+            defaultValue={"Pending"}
+            allowDeselect={false}
+            placeholder="Select status"
+            data={[
+              { value: "Pending", label: "Pending" },
+              { value: "Approved", label: "Approved" },
+              { value: "Rejected", label: "Rejected" },
+              { value: "Shortlisted", label: "Shortlisted" },
+            ]}
+            onChange={(value) => setSelectedStatus(value)}
+          />
+          <Button onClick={fetchApplicantsByStatus}>Fetch Applicants</Button>
+        </Group>
       </Flex>
 
-        {data.map((item, index) => (
-          <Card
-            key={index}
-            onClick={open}
-            radius={"lg"}
-            withBorder
-            mb={10}
+      {(!applicants || applicants.length === 0) && (
+        <Flex
+          pt={50}
+          align={"center"}
+          justify={"center"}
+          direction={"column"}
+          gap={5}
+        >
+          <Text c={"dimmed"} size={"sm"}>
+            Select Job and Status from dropdowns
+          </Text>
+        </Flex>
+      )}
+      {applicants && applicants.length > 0 && (
+        <>
+          <SimpleGrid
+            cols={{ base: 1, sm: 2, lg: 3 }}
+            spacing={{ base: "md", sm: "md" }}
+            verticalSpacing={{ base: "md", sm: "md" }}
           >
-            <Flex gap={10} key={index} align="flex-start">
-              <Image
-                radius={"xl"}
-                h={50}
-                w={50}
-                src={item.image}
-                alt={item.name}
-              />
-              <Flex gap={3} direction="column">
-                <Text fw={700}>{item.name}</Text>
-                <Text size="sm" c={"dimmed"}>
-                  {item.location}
-                </Text>
-                <Pill>{item.skills}</Pill>
-              </Flex>
-            </Flex>
-          </Card>
-        ))}
+            {applicants.map((applicant, index) => (
+              <Card
+                key={index}
+                onClick={() => {
+                  setApplicationId(applicant.application_id.replace("#", ""));
+                  open();
+                }}
+                className="hoverclassscale"
+                radius="md"
+              >
+                <Flex gap={15} align="flex-start">
+                  <Image
+                    radius="md"
+                    h={50}
+                    w={50}
+                    src={
+                      `https://shareinfo.blob.core.windows.net/candidate/${encryptedUserName(
+                        applicant.name
+                      )}${applicant.profile_photo}${azureBlobUrl}` ||
+                      "/public/placeholder.png"
+                    }
+                    alt={applicant.name}
+                  />
 
-      <Modal
-        opened={opened}
-        size="100%"
-        onClose={close}
-        title="Authentication"
-        centered
-      >
-        <ApplicantProfile />
-      </Modal>
+                  <Flex gap={3} direction="column">
+                    {applicant.name && (
+                      <Flex gap={5} align={"center"}>
+                        <Text fw={700}>{applicant.name} </Text>
+                      </Flex>
+                    )}
+
+                    {applicant.current_position && (
+                      <Text size="xs" color="dimmed">
+                        {applicant.current_position} at{" "}
+                        {applicant.current_organization}
+                      </Text>
+                    )}
+
+                    {applicant.city && (
+                      <Text size="xs" color="dimmed">
+                        {applicant.city}, {applicant.state}
+                      </Text>
+                    )}
+
+                    {applicant.skills.length > 0 && (
+                      <Flex wrap={"wrap"} gap={8}>
+                        {applicant.skills.map((skill, idx) => (
+                          <Pill key={idx} size="xs">
+                            {skill}
+                          </Pill>
+                        ))}
+                      </Flex>
+                    )}
+                    </Flex>
+                  </Flex>
+              </Card>
+            ))}
+          </SimpleGrid>
+
+          <Modal
+            style={{ zIndex: 799 }}
+            opened={opened}
+            size="100%"
+            onClose={close}
+            centered
+            withCloseButton={false}
+          >
+            <ApplicantProfile
+              applicationId={applicationId}
+              handleClose={close}
+            />
+          </Modal>
+        </>
+      )}
     </>
   );
 };

@@ -35,26 +35,36 @@ const secretKey16 = import.meta.env.VITE_SECRET_KEY16;
 const azureBlobUrl = import.meta.env.VITE_BLOBURLRESUME;
 
 function encryptedUserName(email) {
-    if (!email) return null;
-    const key = CryptoJS.enc.Utf8.parse(secretKey32);
-    const iv = CryptoJS.enc.Utf8.parse(secretKey16);
-    const encrypted = CryptoJS.AES.encrypt(email, key, { iv: iv, mode: CryptoJS.mode.CBC });
-    const ivBytes = Buffer.from(iv.toString(CryptoJS.enc.Utf8), 'utf-8');
-    const encryptedBytes = Buffer.from(encrypted.ciphertext.toString(CryptoJS.enc.Hex), 'hex');
-    const combinedBytes = Buffer.concat([ivBytes, encryptedBytes]);
-    let base64String = combinedBytes.toString('base64');
-  
-    base64String = base64String.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-  
-    return base64String;
-  }
-  
-  
+  if (!email) return null;
+  const key = CryptoJS.enc.Utf8.parse(secretKey32);
+  const iv = CryptoJS.enc.Utf8.parse(secretKey16);
+  const encrypted = CryptoJS.AES.encrypt(email, key, {
+    iv: iv,
+    mode: CryptoJS.mode.CBC,
+  });
+  const ivBytes = Buffer.from(iv.toString(CryptoJS.enc.Utf8), "utf-8");
+  const encryptedBytes = Buffer.from(
+    encrypted.ciphertext.toString(CryptoJS.enc.Hex),
+    "hex"
+  );
+  const combinedBytes = Buffer.concat([ivBytes, encryptedBytes]);
+  let base64String = combinedBytes.toString("base64");
+
+  base64String = base64String
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+
+  return base64String;
+}
 
 export const ApplicantProfile = ({ applicationId, handleClose }) => {
   const [applicantDetails, setApplicantDetails] = useState(null);
-
-  
+  const [remarks, setRemarks] = useState("");
+  const [communicationScore, setCommunicationScore] = useState("");
+  const [technicalScore, setTechnicalScore] = useState("");
+  const [aptitudeScore, setAptitudeScore] = useState("");
+  const [applicationStatus, setApplicationStatus] = useState("Pending");
 
   useEffect(() => {
     const fetchApplicantDetails = async () => {
@@ -68,10 +78,13 @@ export const ApplicantProfile = ({ applicationId, handleClose }) => {
           }
         );
         setApplicantDetails(response.data);
-        console.log("response of in modal", response.data);
+        setRemarks(response.data.remarks || "");
+        setCommunicationScore(response.data.communication_score || "");
+        setTechnicalScore(response.data.technical_score || "");
+        setAptitudeScore(response.data.aptitude_score || "");
+        setApplicationStatus(response.data.application_status || "Pending");
       } catch (error) {
         toast.error("Error fetching jobs");
-        console.error("Error fetching jobs:", error);
       }
     };
 
@@ -82,9 +95,44 @@ export const ApplicantProfile = ({ applicationId, handleClose }) => {
     return <Text>Loading...</Text>;
   }
 
+  const handleSave = async () => {
+    try {
+      const payload = {
+        remarks: {
+          0: remarks,
+        },
+        communication_score: parseInt(communicationScore),
+        technical_score: parseInt(technicalScore),
+        aptitude_score: parseInt(aptitudeScore),
+        application_status: applicationStatus,
+      };
+
+      await axiosInstance.put(`/specific-student/${applicationId}/`, payload, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+
+      toast.success("Details updated successfully");
+    } catch (error) {
+      toast.error("Error updating details");
+    }
+  };
+
   const encryptedEmail = encryptedUserName(applicantDetails.email);
-  const responseUrl = applicantDetails.cvresume_set[0].cv;
-  const fullUrl = `${azureBlobUrl}/${encryptedEmail}${responseUrl}`;
+
+  console.log(applicantDetails);
+
+  const responseUrl =
+    applicantDetails.cvresume_set &&
+    applicantDetails.cvresume_set.length > 0 &&
+    applicantDetails.cvresume_set[0].cv
+      ? applicantDetails.cvresume_set[0].cv
+      : null;
+
+  const ResumeURL = responseUrl
+    ? `https://shareinfo.blob.core.windows.net/candidate/${encryptedEmail}${responseUrl}${azureBlobUrl}`
+    : null;
 
   return (
     <>
@@ -111,27 +159,31 @@ export const ApplicantProfile = ({ applicationId, handleClose }) => {
           withBorder
         >
           <Flex gap={20}>
-            <Avatar
-              size={"xl"}
-              src={
-                "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.com%2Fvectors%2Fprofile-placeholder&psig=AOvVaw2tpt2bwCa0Xu8WQil-LopC&ust=1720099832439000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCIDfu639iocDFQAAAAAdAAAAABAJ"
-              }
-            />
+            <Avatar size={"xl"} src={"/public/profilePlaceholder.jpg"} />
             <Flex
               justify={"flex-end"}
               align={"flex-start"}
               direction={"column"}
             >
               <Title order={4}>
-                {applicantDetails.candidateprofile.full_name}
+                {applicantDetails.candidateprofile &&
+                applicantDetails.candidateprofile.full_name
+                  ? applicantDetails.candidateprofile.full_name
+                  : applicantDetails.email || ""}
               </Title>
+
               <Text size="sm" c={"dimmed"}>
-                {applicantDetails.candidateprofile.current_position}
+                {applicantDetails.candidateprofile &&
+                  applicantDetails.candidateprofile.current_position}
               </Text>
+
               <Group gap={5} mt={4}>
-                <Pill size="xs" radius={0} variant="default">
-                  {applicantDetails.candidateprofile.current_organization}
-                </Pill>
+                {applicantDetails.candidateprofile &&
+                  applicantDetails.candidateprofile.current_organization && (
+                    <Pill size="xs" radius={0} variant="default">
+                      {applicantDetails.candidateprofile.current_organization}
+                    </Pill>
+                  )}
               </Group>
             </Flex>
           </Flex>
@@ -144,11 +196,7 @@ export const ApplicantProfile = ({ applicationId, handleClose }) => {
               radius={"sm"}
               color="red"
             >
-              <a
-                href={fullUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href={ResumeURL} target="_blank" rel="noopener noreferrer">
                 Resume
               </a>
             </Button>
@@ -158,6 +206,7 @@ export const ApplicantProfile = ({ applicationId, handleClose }) => {
               leftSection={<IconMessage size={14} />}
               radius={"sm"}
               color="blue"
+              disabled
             >
               Message Now
             </Button>
@@ -314,17 +363,40 @@ export const ApplicantProfile = ({ applicationId, handleClose }) => {
             placeholder="Add interview remarks"
             autosize
             minRows={6}
+            value={remarks}
+            onChange={(event) => setRemarks(event.currentTarget.value)}
           />
           <Flex align={"end"} justify={"space-between"}>
             <Flex align={"end"} justify={"space-between"} gap={10} mt={10}>
               <Input.Wrapper label="Communication Mark">
-                <Input radius={"md"} placeholder="Enter the Score" />
+                <Input
+                  radius={"md"}
+                  placeholder="Enter the Score"
+                  value={communicationScore}
+                  onChange={(event) =>
+                    setCommunicationScore(event.currentTarget.value)
+                  }
+                />
               </Input.Wrapper>
               <Input.Wrapper label="Technical Mark">
-                <Input radius={"md"} placeholder="Enter the Score" />
+                <Input
+                  radius={"md"}
+                  placeholder="Enter the Score"
+                  value={technicalScore}
+                  onChange={(event) =>
+                    setTechnicalScore(event.currentTarget.value)
+                  }
+                />
               </Input.Wrapper>
-              <Input.Wrapper label="Apptitude Mark">
-                <Input radius={"md"} placeholder="Enter the Score" />
+              <Input.Wrapper label="Aptitude Mark">
+                <Input
+                  radius={"md"}
+                  placeholder="Enter the Score"
+                  value={aptitudeScore}
+                  onChange={(event) =>
+                    setAptitudeScore(event.currentTarget.value)
+                  }
+                />
               </Input.Wrapper>
             </Flex>
             <Group align="end" justify="end">
@@ -332,15 +404,20 @@ export const ApplicantProfile = ({ applicationId, handleClose }) => {
                 label="Candidate Status"
                 defaultValue={"pending"}
                 radius={"md"}
+                allowDeselect={false}
                 placeholder="Select status"
                 data={[
                   { value: "Pending", label: "Pending" },
-                  { value: "Approved", label: "Shortlisted" },
+                  { value: "Approved", label: "Approved" },
                   { value: "Rejected", label: "Rejected" },
-                  { value: "Shortlisted", label: "On Hold" },
+                  { value: "Shortlisted", label: "Shortlisted" },
                 ]}
+                value={applicationStatus}
+                onChange={(value) => setApplicationStatus(value)}
               />
-              <Button radius={"md"}>Save</Button>
+              <Button radius={"md"} onClick={handleSave}>
+                Save
+              </Button>
             </Group>
           </Flex>
         </Card>
