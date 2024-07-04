@@ -181,9 +181,9 @@ export const AllApplicants = () => {
                     h={50}
                     w={50}
                     src={
-                      `https://shareinfo.blob.core.windows.net/candidate/${encryptedUserName(
-                        applicant.name
-                      )}${applicant.profile_photo}${azureBlobUrl}` ||
+                      // `https://shareinfo.blob.core.windows.net/candidate/${encryptedUserName(
+                      //   applicant.name
+                      // )}${applicant.profile_photo}${azureBlobUrl}` ||
                       "/profilePlaceholder.jpg"
                     }
                     alt=""
