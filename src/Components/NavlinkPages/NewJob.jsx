@@ -15,7 +15,7 @@ import axiosInstance from "../../Helpers/axios";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { toast, ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
 const SALARY_TYPE = [
   { value: "Fixed", label: "Fixed" },
@@ -110,7 +110,8 @@ export const NewJob = () => {
       const accessToken = localStorage.getItem("access_token");
 
       try {
-        const response = await axiosInstance.get(import.meta.env.VITE_BASEURLDOMAINLIST,
+        const response = await axiosInstance.get(
+          import.meta.env.VITE_BASEURLDOMAINLIST,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -145,9 +146,8 @@ export const NewJob = () => {
       //   }, {});
 
       const minQualifications = {
-        1: values.min_qualification.trim()
+        1: values.min_qualification.trim(),
       };
-
 
       // const perksBenefits = values.perks_benefits
       //   .split(",")
@@ -157,7 +157,7 @@ export const NewJob = () => {
       //   }, {});
 
       const perksBenefits = {
-        1: values.perks_benefits.trim()
+        1: values.perks_benefits.trim(),
       };
 
       const requiredSkills = values.required_skills
@@ -186,11 +186,14 @@ export const NewJob = () => {
         recruitment_end_date: formattedDate,
         minimum_salary: values.minimum_salary,
         maximum_salary:
-          values.salary_type === "Onwards" || "Fixed" ? 0 : values.maximum_salary,
-        minimum_experience:
-          values.experience_type === "Fresher"
+          values.salary_type === "Onwards" || values.salary_type === "Fixed"
             ? 0
-            : values.minimum_experience,
+            : values.salary_type === "Range"
+            ? values.maximum_salary
+            : 0,
+
+        minimum_experience:
+          values.experience_type === "Fresher" ? 0 : values.minimum_experience,
       };
 
       const response = await axiosInstance.post("/create-job/", payload, {
@@ -297,11 +300,10 @@ export const NewJob = () => {
                 mt={10}
                 label="Domain"
                 error={touched.domain && errors.domain}
-                
               >
                 <Select
                   data={domainList.map((domain) => ({
-                    value: String(domain.id), 
+                    value: String(domain.id),
                     label: domain.domain_name,
                   }))}
                   searchable

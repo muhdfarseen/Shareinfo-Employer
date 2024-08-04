@@ -1,6 +1,5 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
 
 const csrfToken = Cookies.get("csrftoken");
 
@@ -12,6 +11,14 @@ const axiosInstance = axios.create({
     Accept: "application/json",
   },
   withCredentials: true,
+});
+
+const refreshAxiosInstance = axios.create({
+  baseURL: import.meta.env.VITE_BASEURL,
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
 });
 
 axiosInstance.interceptors.request.use(
@@ -44,7 +51,7 @@ axiosInstance.interceptors.response.use(
       }
 
       try {
-        const response = await axiosInstance.post("/token/refresh/", {
+        const response = await refreshAxiosInstance.post("/token/refresh/", {
           refresh: refreshToken,
         });
 
