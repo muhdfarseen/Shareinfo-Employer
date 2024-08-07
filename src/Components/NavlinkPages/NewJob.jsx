@@ -129,7 +129,7 @@ export const NewJob = () => {
     fetchDomainList();
   }, []);
 
-  const handleSubmit = async (values, { setSubmitting }) => {
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
       const accessToken = localStorage.getItem("access_token");
 
@@ -204,7 +204,7 @@ export const NewJob = () => {
 
       if (response.status === 201 || response.status === 200) {
         toast.success("Job posted successfully");
-        window.location.reload();
+        resetForm();
       }
     } catch (error) {
       toast.error("Failed to create job. Please try again.");
